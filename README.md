@@ -78,6 +78,10 @@ $obj->books[1]->title;    // "Pride and Prejudice"
 $obj->books[0]->missing;  // throws InvalidPropertyException
 ```
 
+#### set($key, $value, $onlyIfExists = false)
+
+
+
 #### getOrFail($key)
 
 Similar to `get()` but will throw a `InvalidPropertyException` when the key is not found.
