@@ -1,0 +1,29 @@
+{
+  "name": "rexsoftware/array-object",
+  "type": "library",
+  "authors": [
+    {
+      "name": "Jodie Dunlop",
+      "email": "jodie.dunlop@rexsoftware.com.au"
+    }
+  ],
+  "require": {
+    "bkvfoundry/utility-belt": "^2.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^5.7"
+  },
+  "autoload": {
+    "psr-4": {
+      "RexSoftware\\ArrayObject\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "RexSoftware\\ArrayObject\\Test\\": "tests/"
+    }
+  },
+  "scripts": {
+    "tests": "phpunit"
+  }
+}

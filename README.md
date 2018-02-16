@@ -1,4 +1,4 @@
-# array-object-php
+# Array Object
 
 An interface for working fluently with array's.
 
