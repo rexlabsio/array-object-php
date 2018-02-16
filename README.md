@@ -2,7 +2,7 @@
 
 An interface for working fluently with array's.
 
-ArrayObject provides a wrapper around PHP's built-in arrays that allow you methods for filtering, and retrieving items, and conveniently treats individual items and collections as the same object.
+ArrayObject provides a wrapper around PHP's built-in arrays which includes methods for filtering, and retrieving items, and conveniently treats individual items and collections as the same object.
 
 This is especially useful for working with JSON responses from API requests.
 
@@ -49,8 +49,6 @@ The examples below are based on the follow input data.
 
 
 ```php
-
-
 $obj->books; // Instance of ArrayObject
 $obj->books->pluck('author'); // array [ 'George Orwell', 'Jane Austen' ]
 $obj->books->count(); // 2
@@ -59,6 +57,8 @@ $obj->books[0]; // Instance of ArrayObject
 $obj->books[0]->isCollection(); // false
 $obj->books[0]->id; // 1
 ```
+
+Note: All of the methods gracefully handle treating an individual item as an array.
 
 #### get($key, $default = null)
 

@@ -116,14 +116,41 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Return a new collection by filtering node data within the current collection
-     * @param array $conditions
+     * Return a new collection by filtering data within the current collection
+     * @param mixed $filter
      * @return ArrayObjectInterface
      */
-    public function filter(array $conditions): ArrayObjectInterface
+    public function filter($filter): ArrayObjectInterface
     {
+        return \is_callable($filter, true) ?
+            $this->filterCallback($filter) :
+            $this->filterConditions($filter);
+    }
+
+    /**
+     * Return a new collection by filtering the data via a callback
+     * @param callable|\Closure $fn
+     * @return ArrayObjectInterface
+     */
+    public function filterCallback(callable $fn): ArrayObjectInterface
+    {
+        return new static(array_filter($this->isCollection() ? $this->data : [$this->data], $fn));
+    }
+
+    /**
+     * Return a new collection by filtering the data against a list of conditions
+     * @param array $conditions
+     * @param string $matchType
+     * @param bool $preserveKeys
+     * @return ArrayObjectInterface
+     */
+    public function filterConditions(
+        array $conditions,
+        string $matchType = CollectionUtility::MATCH_TYPE_LOOSE,
+        $preserveKeys = false
+    ): ArrayObjectInterface {
         return new static(CollectionUtility::filterWhere($this->isCollection() ? $this->data : [$this->data],
-            $conditions));
+            $conditions, $matchType, $preserveKeys));
     }
 
     /**
@@ -174,6 +201,21 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
         }
 
         return $this->transformValue($result);
+    }
+
+    /**
+     * Forces key to be prefixed with an offset
+     * @param $key
+     * @return string
+     */
+    protected function getNormalizedKey($key): string
+    {
+        // Keys within collections must be offset based
+        if (!\is_int($key) && $this->isCollection() && !preg_match('/^\d+\./', $key)) {
+            $key = "0.$key";
+        }
+
+        return $key;
     }
 
     /**
@@ -240,21 +282,6 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     public function has($key): bool
     {
         return ArrayUtility::dotRead($this->data, $this->getNormalizedKey($key)) !== null;
-    }
-
-    /**
-     * Forces key to be prefixed with an offset
-     * @param $key
-     * @return string
-     */
-    protected function getNormalizedKey($key): string
-    {
-        // Keys within collections must be offset based
-        if (!\is_int($key) && $this->isCollection() && !preg_match('/^\d+\./', $key)) {
-            $key = "0.$key";
-        }
-
-        return $key;
     }
 
     /**

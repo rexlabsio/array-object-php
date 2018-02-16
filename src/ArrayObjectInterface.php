@@ -59,10 +59,10 @@ interface ArrayObjectInterface
     public function each(callable $callback);
 
     /**
-     * @param array $conditions
+     * @param mixed $conditions
      * @return ArrayObjectInterface|null
      */
-    public function filter(array $conditions);
+    public function filter($filter);
 
     /**
      * @param string $key
