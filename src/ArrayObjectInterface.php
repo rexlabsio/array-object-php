@@ -85,4 +85,33 @@ interface ArrayObjectInterface
      */
     public function last();
 
+    /**
+     * Pull the first item off the collection.
+     * If the underlying data is not a collection, it will be converted to one.
+     * @return mixed
+     */
+    public function shift();
+
+    /**
+     * Add one or more items at the start of the collection.
+     * If the underlying data is not a collection, it will be converted to one.
+     * @param array $values
+     * @return $this
+     */
+    public function unshift(...$values);
+
+    /**
+     * Add one or more items to the end of the collection.
+     * If the underlying data is not a collection, it will be converted to one.
+     * @param array $values
+     * @return $this
+     */
+    public function push(...$values);
+
+    /**
+     * Pull the last item off the end of the collection.
+     * If the underlying data is not a collection, it will be converted to one.
+     * @return mixed
+     */
+    public function pop();
 }

@@ -162,31 +162,6 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Determine if the node contains a property
-     * @param string $key
-     * @return bool
-     */
-    public function has($key): bool
-    {
-        return ArrayUtility::dotRead($this->data, $this->getNormalizedKey($key)) !== null;
-    }
-
-    /**
-     * Forces key to be prefixed with an offset
-     * @param $key
-     * @return string
-     */
-    protected function getNormalizedKey($key): string
-    {
-        // Keys within collections must be offset based
-        if (!\is_int($key) && $this->isCollection() && !preg_match('/^\d+\./', $key)) {
-            $key = "0.$key";
-        }
-
-        return $key;
-    }
-
-    /**
      * @param string $key
      * @return mixed
      * @throws \RexSoftware\ArrayObject\Exceptions\InvalidPropertyException
@@ -255,6 +230,94 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
         $this->data[$key] = $value;
 
         return $this;
+    }
+
+    /**
+     * Determine if the node contains a property
+     * @param string $key
+     * @return bool
+     */
+    public function has($key): bool
+    {
+        return ArrayUtility::dotRead($this->data, $this->getNormalizedKey($key)) !== null;
+    }
+
+    /**
+     * Forces key to be prefixed with an offset
+     * @param $key
+     * @return string
+     */
+    protected function getNormalizedKey($key): string
+    {
+        // Keys within collections must be offset based
+        if (!\is_int($key) && $this->isCollection() && !preg_match('/^\d+\./', $key)) {
+            $key = "0.$key";
+        }
+
+        return $key;
+    }
+
+    /**
+     * Pull the first item off the collection.
+     * If the underlying data is not a collection, it will be converted to one.
+     * @return mixed
+     */
+    public function shift()
+    {
+        $this->forceCollection();
+
+        return array_shift($this->data);
+    }
+
+    /**
+     * Forces the underluing data-structure to become a collection
+     */
+    protected function forceCollection()
+    {
+        if (!$this->isCollection()) {
+            $this->isCollection = true;
+            $this->data = [$this->data];
+        }
+    }
+
+    /**
+     * Add one or more items at the start of the collection.
+     * If the underlying data is not a collection, it will be converted to one.
+     * @param array $values
+     * @return mixed
+     */
+    public function unshift(...$values)
+    {
+        $this->forceCollection();
+        array_unshift($this->data, ...$values);
+
+        return $this;
+    }
+
+    /**
+     * Add one or more items to the end of the collection.
+     * If the underlying data is not a collection, it will be converted to one.
+     * @param array $values
+     * @return mixed
+     */
+    public function push(...$values)
+    {
+        $this->forceCollection();
+        array_push($this->data, ...$values);
+
+        return $this;
+    }
+
+    /**
+     * Pull the last item off the end of the collection.
+     * If the underlying data is not a collection, it will be converted to one.
+     * @return mixed
+     */
+    public function pop()
+    {
+        $this->forceCollection();
+
+        return array_pop($this->data);
     }
 
     /**

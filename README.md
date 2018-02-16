@@ -166,6 +166,8 @@ $obj->books->toArray(); // [ [ 'id' => 1, 'title' => '1984', 'author' => 'George
 $obj->toArray(); // [ 'books' => [ [ 'id' => 1, 'title' => '1984', 'author' => 'George Orwell' ], [ 'id' => 2, 'title' => 'Pride and Prejudice', 'author' => 'Jane Austen' ] ] ]
 ```
 
+#### toJson()
+
 #### isCollection()
 
 Determines if the underlying array is a collection.
@@ -175,3 +177,11 @@ $obj->books->isCollection(); // true
 $obj->get('books.0')->isCollection(); // false
 $obj->isCollection(); // false
 ```
+
+#### unshift()
+
+#### shift()
+
+#### push()
+
+#### pop()
