@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "5b113eef8f74da55d8b1746721a8f68d",
+    "content-hash": "07fc07027cf40f80e2fc6c3ab8f44352",
     "packages": [
         {
             "name": "bkvfoundry/utility-belt",
-            "version": "2.1.0",
+            "version": "2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/bkvfoundry/utility-belt.git",
-                "reference": "bdaf550ed5dd497cfbd8e700c49b8c8ce68d5f2c"
+                "reference": "349b98c78870371ad26b72199206c7a65ceafbd6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bkvfoundry/utility-belt/zipball/bdaf550ed5dd497cfbd8e700c49b8c8ce68d5f2c",
-                "reference": "bdaf550ed5dd497cfbd8e700c49b8c8ce68d5f2c",
+                "url": "https://api.github.com/repos/bkvfoundry/utility-belt/zipball/349b98c78870371ad26b72199206c7a65ceafbd6",
+                "reference": "349b98c78870371ad26b72199206c7a65ceafbd6",
                 "shasum": ""
             },
             "require": {
@@ -46,6 +46,7 @@
             ],
             "description": "A set of helpful utilities for working with data, collections (arrays of arrays) and arrays in php",
             "keywords": [
+                "array",
                 "collection",
                 "dot read",
                 "dot syntax",
@@ -55,7 +56,7 @@
                 "utilities",
                 "utility"
             ],
-            "time": "2016-03-05T00:22:53+00:00"
+            "time": "2018-02-17T02:23:39+00:00"
         }
     ],
     "packages-dev": [
@@ -1390,6 +1391,8 @@
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
-    "platform": [],
+    "platform": {
+        "php": ">=7.0"
+    },
     "platform-dev": []
 }

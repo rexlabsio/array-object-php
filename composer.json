@@ -20,7 +20,7 @@
   "minimum-stability": "stable",
   "require": {
     "php": ">=7.0",
-    "bkvfoundry/utility-belt": "^2.1"
+    "bkvfoundry/utility-belt": "^2.2"
   },
   "require-dev": {
     "phpunit/phpunit": "^5.7"

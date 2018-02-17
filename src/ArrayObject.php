@@ -281,6 +281,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     /**
      * @param string|mixed $key
      * @param mixed        $value
+     * @param bool         $onlyIfExists
      * @return $this
      */
     public function set($key, $value, $onlyIfExists = false)
@@ -288,9 +289,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
         if ($onlyIfExists && !$this->has($key)) {
             return $this;
         }
-
-        // TODO: Need ArrayUtil::dotWrite()
-        $this->data[$key] = $this->unbox($value);
+        ArrayUtility::dotMutate($this->data, $key, $this->unbox($value));
 
         return $this;
     }
