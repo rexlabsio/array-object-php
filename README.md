@@ -1,6 +1,6 @@
 # Array Object
 
-An interface for working fluently with array's.
+A light-weight interface for working fluently with array's. 
 
 ArrayObject provides a wrapper around PHP's built-in arrays which includes methods for filtering, and retrieving items, and conveniently treats individual items and collections as the same object.
 
@@ -11,6 +11,11 @@ This is especially useful for working with JSON responses from API requests.
 ```bash
 composer require rexsoftware/array-object
 ```
+
+## Dependencies
+
+- PHP 7.0 (or greater)
+- `bkvfoundry/utility-belt`
 
 ## Usage
 
@@ -80,12 +85,17 @@ $obj->books[0]->missing;  // throws InvalidPropertyException
 
 #### set($key, $value, $onlyIfExists = false)
 
+The `set()` method allows you to set a property using dot notation. It will automatically create the 
+underlying array structure:
 
+```php
+$obj->set('some.deep.key', $value);  // Set nested property
+$obj->set('some_key', $anotherArrayObject);  // Pass an ArrayObjectInterface as value
+```
 
 #### getOrFail($key)
 
 Similar to `get()` but will throw a `InvalidPropertyException` when the key is not found.
-
 
 #### has($key)
 
@@ -136,6 +146,12 @@ $obj->books->count(); // 2
 $obj->books[0]->count();
 ```
 
+#### hasItems()
+
+```php
+$obj->hasItems();   // boolean indicating if count() > 0
+```
+
 #### filter(callback|array $conditions)
 
 Apply either a callback, or an array of where conditions, and only return items that match.
@@ -154,12 +170,9 @@ You can also specify a list of conditions using an array:
 ```php
 // Only return items with a title
 $filteredBooksWithTitle = $obj->books->filter(["title" => '1984']);
-
 ```
 
-
 #### toArray()
-
 
 Getting the original array is available via the `toArray()` method:
 
@@ -172,6 +185,12 @@ $obj->toArray(); // [ 'books' => [ [ 'id' => 1, 'title' => '1984', 'author' => '
 
 #### toJson()
 
+Returns a json encoded string of the underlying array:
+
+```php
+$json = $obj->toJson(); // '{ "some_prop": [ "val1", "val2" ] }`
+```
+
 #### isCollection()
 
 Determines if the underlying array is a collection.
@@ -182,10 +201,44 @@ $obj->get('books.0')->isCollection(); // false
 $obj->isCollection(); // false
 ```
 
-#### unshift()
+#### unshift($val[, $val...])
+
+Adds one or more items to the *start* of the collection.
+If the array is not currently a collection it will be converted to a collection with one element.
+
+```php
+$obj->unshift('value')
+    ->unshift('value1', 'value2', 'value3'); 
+```
+
+Note: you can pass `ArrayObject`'s as values.
 
 #### shift()
 
-#### push()
+Pulls the *first* item off the collection.  
+If the array is not currently a collection it will be converted to a collection with one element. 
+
+```php
+$item = $obj->shift(); // ArrayObject
+```
+
+#### push($val[, $val...])
+
+Adds one or more items to the *end* of the collection.
+If the array is not currently a collection it will be converted to a collection with one element.
+
+```php
+$obj->push('value')
+    ->push('value1', 'value2', 'value3'); 
+```
+
+Note: you can pass `ArrayObject`'s as values.
 
 #### pop()
+
+Pulls the *last* item off the collection.  
+If the array is not currently a collection it will be converted to a collection with one element. 
+
+```php
+$item = $obj->pop();  // ArrayObject
+```

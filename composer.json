@@ -1,13 +1,25 @@
 {
   "name": "rexsoftware/array-object",
-  "type": "library",
-  "authors": [
-    {
-      "name": "Jodie Dunlop",
-      "email": "jodie.dunlop@rexsoftware.com.au"
-    }
+  "description": "Provides an interface for simplifying working with associative and sequential arrays (collections).",
+  "keywords": [
+    "array",
+    "arrays",
+    "interface",
+    "fluent",
+    "collection",
+    "collections",
+    "queue",
+    "stack",
+    "iterator",
+    "magic"
   ],
+  "type": "library",
+  "config": {
+    "preferred-install": "dist"
+  },
+  "minimum-stability": "stable",
   "require": {
+    "php": ">=7.0",
     "bkvfoundry/utility-belt": "^2.1"
   },
   "require-dev": {
@@ -24,6 +36,16 @@
     }
   },
   "scripts": {
-    "tests": "phpunit"
-  }
+    "test": "phpunit",
+    "tests": "phpunit",
+    "coverage": "phpunit --coverage-html ./report"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Jodie Dunlop",
+      "email": "jodie.dunlop@rexsoftware.com.au",
+      "role": "Developer"
+    }
+  ]
 }

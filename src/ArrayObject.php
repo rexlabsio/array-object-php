@@ -55,10 +55,10 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     {
         if ($this->isCollection()) {
             foreach ($this->data as $val) {
-                $callback($this->transformValue($val));
+                $callback($this->box($val));
             }
         } else {
-            $callback($this->transformValue($this->data));
+            $callback($this->box($this->data));
         }
 
         return $this;
@@ -70,13 +70,25 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Return a plain value or coerce into a Node or Collection object
-     * @param $val
+     * Return a plain value or coerce into an ArrayObject
+     * @param mixed $val
      * @return ArrayObjectInterface|mixed
      */
-    protected function transformValue($val)
+    protected function box($val)
     {
         return \is_array($val) ? static::fromArray($val) : $val;
+    }
+
+    /**
+     * Return a plain value or coerce into a Node or Collection object
+     * @param mixed $val
+     * @return array|mixed
+     */
+    protected function unbox($val)
+    {
+        return $val instanceof ArrayObjectInterface ?
+            $val->toArray() :
+            $val;
     }
 
     /**
@@ -107,7 +119,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     {
         if ($this->isCollection()) {
             return array_map(function ($val) {
-                return $this->transformValue($val);
+                return $this->box($val);
             }, CollectionUtility::pluck($this->data, $key));
         }
 
@@ -163,7 +175,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
             return $this;
         }
 
-        return isset($this->data[0]) ? $this->transformValue($this->data[0]) : null;
+        return isset($this->data[0]) ? $this->box($this->data[0]) : null;
     }
 
     /**
@@ -176,7 +188,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
             return $this;
         }
 
-        return isset($this->data[0]) ? $this->transformValue(ArrayUtility::last($this->data)) : null;
+        return isset($this->data[0]) ? $this->box(ArrayUtility::last($this->data)) : null;
     }
 
     /**
@@ -186,6 +198,15 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     public function count()
     {
         return $this->isCollection() ? \count($this->data) : 1;
+    }
+
+    /**
+     * Determine if there are any more items in this array
+     * @return bool
+     */
+    public function hasItems(): bool
+    {
+        return $this->count() > 0;
     }
 
     /**
@@ -200,7 +221,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
             throw new InvalidPropertyException("Missing property '$key'");
         }
 
-        return $this->transformValue($result);
+        return $this->box($result);
     }
 
     /**
@@ -254,7 +275,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
             return $default;
         }
 
-        return $this->transformValue($result);
+        return $this->box($result);
     }
 
     /**
@@ -269,7 +290,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
         }
 
         // TODO: Need ArrayUtil::dotWrite()
-        $this->data[$key] = $value;
+        $this->data[$key] = $this->unbox($value);
 
         return $this;
     }
@@ -288,16 +309,20 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
      * Pull the first item off the collection.
      * If the underlying data is not a collection, it will be converted to one.
      * @return mixed
+     * @throws \RexSoftware\ArrayObject\Exceptions\InvalidOffsetException
      */
     public function shift()
     {
         $this->forceCollection();
+        if (!$this->hasItems()) {
+            throw new InvalidOffsetException('Cannot shift this array, no more items');
+        }
 
-        return array_shift($this->data);
+        return $this->box(array_shift($this->data));
     }
 
     /**
-     * Forces the underluing data-structure to become a collection
+     * Forces the underlying data-structure to become a collection
      */
     protected function forceCollection()
     {
@@ -312,10 +337,12 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
      * If the underlying data is not a collection, it will be converted to one.
      * @param array $values
      * @return mixed
+     * @throws \RexSoftware\ArrayObject\Exceptions\InvalidOffsetException
      */
     public function unshift(...$values)
     {
         $this->forceCollection();
+        $values = array_map([$this, 'unbox'], $values);
         array_unshift($this->data, ...$values);
 
         return $this;
@@ -330,6 +357,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     public function push(...$values)
     {
         $this->forceCollection();
+        $values = array_map([$this, 'unbox'], $values);
         array_push($this->data, ...$values);
 
         return $this;
@@ -339,12 +367,16 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
      * Pull the last item off the end of the collection.
      * If the underlying data is not a collection, it will be converted to one.
      * @return mixed
+     * @throws \RexSoftware\ArrayObject\Exceptions\InvalidOffsetException
      */
     public function pop()
     {
         $this->forceCollection();
+        if (!$this->hasItems()) {
+            throw new InvalidOffsetException('Cannot shift this array, no more items');
+        }
 
-        return array_pop($this->data);
+        return $this->box(array_pop($this->data));
     }
 
     /**
@@ -363,7 +395,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
         $val = null;
         if ($this->offsetExists($offset)) {
             if ($this->isCollection()) {
-                $val = $this->transformValue($this->data[$offset]);
+                $val = $this->box($this->data[$offset]);
             } else {
                 $val = $this;
             }
@@ -390,7 +422,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
             throw new InvalidOffsetException('Cannot set a value by offset on a non-collection');
         }
         if ($this->offsetExists($offset)) {
-            $this->data[$offset] = $value;
+            $this->data[$offset] = $this->unbox($value);
         }
     }
 
@@ -412,7 +444,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     public function getIterator(): ArrayIterator
     {
         return new ArrayIterator(array_map(function ($val) {
-            return $this->transformValue($val);
+            return $this->box($val);
         }, $this->isCollection() ? $this->data : [$this->data]));
     }
 
