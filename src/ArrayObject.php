@@ -130,8 +130,8 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     public function filterCallback(callable $fn): ArrayObjectInterface
     {
         return new static(array_values(array_filter(array_map(function ($data) {
-                return $this->box($data);
-            }, $this->isCollection() ? $this->data : [$this->$this->data]), $fn)));
+            return $this->box($data);
+        }, $this->isCollection() ? $this->data : [$this->$this->data]), $fn)));
     }
 
     /**
@@ -375,19 +375,18 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
 
     /**
      * @inheritdoc
+     * @throws \RexSoftware\ArrayObject\Exceptions\InvalidOffsetException
      */
     public function offsetGet($offset)
     {
-        $val = null;
-        if ($this->offsetExists($offset)) {
-            if ($this->isCollection()) {
-                $val = $this->box($this->data[$offset]);
-            } else {
-                $val = $this;
-            }
+        if (!$this->offsetExists($offset)) {
+            throw new InvalidOffsetException('Invalid offset: ' . $offset);
+        }
+        if ($this->isCollection()) {
+            return $this->box($this->data[$offset]);
         }
 
-        return $val;
+        return $this;
     }
 
     /**
@@ -405,10 +404,12 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     public function offsetSet($offset, $value)
     {
         if (!$this->isCollection()) {
-            throw new InvalidOffsetException('Cannot set a value by offset on a non-collection');
+            $this->forceCollection();
         }
-        if ($this->offsetExists($offset)) {
+        if ($this->offsetExists($offset) || $offset === \count($this->data)) {
             $this->data[$offset] = $this->unbox($value);
+        } else {
+            throw new InvalidOffsetException('Invalid offset: ' . $offset);
         }
     }
 

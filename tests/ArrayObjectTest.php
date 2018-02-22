@@ -7,6 +7,7 @@ use RexSoftware\ArrayObject\ArrayObjectInterface;
 use RexSoftware\ArrayObject\Exceptions\InvalidOffsetException;
 use RexSoftware\ArrayObject\Exceptions\InvalidPropertyException;
 use RexSoftware\ArrayObject\Exceptions\JsonDecodeException;
+use RexSoftware\ArrayObject\Exceptions\JsonEncodeException;
 
 class ArrayObjectTest extends TestCase
 {
@@ -160,12 +161,11 @@ class ArrayObjectTest extends TestCase
                 'y' => 2,
             ],
         ]);
+        $this->assertEquals('hello', $obj->getOrFail('subject'));
+        $this->assertEquals(2, $obj->getOrFail('sub.y'));
+
         $this->expectException(InvalidPropertyException::class);
         $obj->getOrFail('invalid_key');
-        $this->expectException(InvalidPropertyException::class);
-        $obj->getOrFail('sub.invalid_key');
-
-        $this->assertEquals(2, $obj->getOrFail('sub.x'));
     }
 
     public function test_to_array_returns_same_array()
@@ -395,6 +395,22 @@ class ArrayObjectTest extends TestCase
         $this->assertFalse(isset($obj[3]));
     }
 
+    public function test_get_array_access()
+    {
+        $book = ArrayObject::fromArray([
+            'id' => 1,
+            'title' => '1984',
+            'author' => 'George Orwell',
+        ]);
+        $book = $book[0];
+        $this->assertEquals([
+            'id' => 1,
+            'title' => '1984',
+            'author' => 'George Orwell',
+        ], $book->toArray());
+
+    }
+
     public function test_collection_has()
     {
         $obj = ArrayObject::fromArray([
@@ -547,7 +563,9 @@ class ArrayObjectTest extends TestCase
         ]);
         $this->assertNotEmpty($obj[0]);
         $this->assertNotEmpty($obj[1]);
-        $this->assertEmpty($obj[2]);
+
+        $this->expectException(InvalidOffsetException::class);
+        $invalidId = $obj[2]->id;
     }
 
     public function test_first_returns_first_item()
@@ -746,6 +764,25 @@ class ArrayObjectTest extends TestCase
                 ],
             ],
         ], $obj->toArray());
+
+        $book = ArrayObject::fromArray([
+            'id' => 1,
+            'title' => '1984',
+            'author' => 'George Orwell',
+        ]);
+        $book[1] = ArrayObject::fromArray([
+            'id' => 2,
+            'title' => 'Pride and Prejudice',
+            'author' => 'Jane Austen',
+        ]);
+        $this->assertCount(2, $book);
+
+        $this->expectException(InvalidOffsetException::class);
+        $book[3] = ArrayObject::fromArray([
+            'id' => 2,
+            'title' => 'Pride and Prejudice',
+            'author' => 'Jane Austen',
+        ]);
     }
 
     public function test_has_items()
@@ -1047,6 +1084,11 @@ class ArrayObjectTest extends TestCase
                 'author' => 'Jane Austen',
             ],
         ]), $books->toJson());
+
+        $this->expectException(JsonEncodeException::class);
+        ArrayObject::fromArray([
+            'title' => "\xB1\x31", // Bad UTF-8 sequence
+        ])->toJson();
     }
 
     public function test_string_casting()
@@ -1077,7 +1119,7 @@ class ArrayObjectTest extends TestCase
         ]), (string)$books);
     }
 
-    public function test_magic_set()
+    public function test_magic_setter()
     {
         $book = ArrayObject::fromArray([
             'id' => 1,
