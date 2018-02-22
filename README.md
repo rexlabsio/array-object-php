@@ -1,4 +1,6 @@
-# Array Object
+# Array Object 
+
+[![Build Status](https://travis-ci.org/rexlabsio/array-object-php.svg?branch=master)](https://travis-ci.org/rexlabsio/array-object-php)
 
 ArrayObject is a  light-weight interface for working fluently with array's. 
 
