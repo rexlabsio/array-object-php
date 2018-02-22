@@ -6,6 +6,8 @@ ArrayObject provides a wrapper around PHP's built-in `array` type which includes
 
 This is especially useful for working with JSON responses from API requests.
 
+License: MIT
+
 ## Installation
 
 ```bash
@@ -268,3 +270,14 @@ If the array is not currently a collection it will be converted to a collection 
 ```php
 $item = $obj->pop();  // ArrayObject
 ```
+
+## Contributing
+
+Contributions are welcome, please submit a pull-request or create an issue.
+Your submitted code should be formatted using PSR-1/PSR-2 standards.
+
+## About
+
+- Author: [Jodie Dunlop](https://github.com/jodiedunlop)
+- License: [MIT](LICENSE)
+- Copyright (c) 2018 Rex Software Pty Ltd
