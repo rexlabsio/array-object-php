@@ -25,6 +25,8 @@ composer require rexsoftware/array-object
 
 ```
 <?php
+require 'vendor/autoload.php';
+use RexSoftware\ArrayObject;
 
 // Initialise from an Array
 $obj = ArrayObject::fromArray([...]);
@@ -64,7 +66,7 @@ The examples below are based on the follow input data.
 
 ```php
 $obj->books; // Instance of ArrayObject
-$obj->books->pluck('author'); // array [ 'George Orwell', 'Jane Austen' ]
+$obj->books->pluckArray('author'); // array [ 'George Orwell', 'Jane Austen' ]
 $obj->books->count(); // 2
 $obj->books->isCollection(); // true
 $obj->books[0]; // Instance of ArrayObject
@@ -101,6 +103,8 @@ underlying array structure:
 $obj->set('some.deep.key', $value);  // Set nested property
 $obj->set('some_key', $anotherArrayObject);  // Pass an ArrayObjectInterface as value
 ```
+
+When the `$onlyIfExists` flag is passed as `true`, it will only set that property if the key already exists.
 
 #### getOrFail($key)
 
