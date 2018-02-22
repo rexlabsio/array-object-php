@@ -23,7 +23,7 @@ composer require rexsoftware/array-object
 
 ## Usage
 
-```
+```php
 <?php
 require 'vendor/autoload.php';
 use RexSoftware\ArrayObject;
