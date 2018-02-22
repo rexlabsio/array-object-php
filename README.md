@@ -1,8 +1,8 @@
 # Array Object
 
-A light-weight interface for working fluently with array's. 
+ArrayObject is a  light-weight interface for working fluently with array's. 
 
-ArrayObject provides a wrapper around PHP's built-in arrays which includes methods for filtering, and retrieving items, and conveniently treats individual items and collections as the same object.
+ArrayObject provides a wrapper around PHP's built-in `array` type which includes methods for filtering, and retrieving items, and conveniently treats individual items and collections as the same object.
 
 This is especially useful for working with JSON responses from API requests.
 
@@ -28,6 +28,11 @@ $obj = ArrayObject::fromArray([...]);
 // Initialise from a JSON encoded string
 $obj = ArrayObject::fromJson($str);
 
+// Output to array
+$arr = $obj->toArray();
+
+// Output to JSON encoded string
+$json = $obj->toJson();
 ```
 
 The examples below are based on the follow input data.
@@ -113,12 +118,12 @@ $obj->has('books.5'); // false
 Looping over a collection can be acheived by passing a callback to `each()`:
 
 ```php
-$obj->books->each(function($obj) {
-    echo "ID: {$obj->id}, title: {$obj->title}\n";
+$obj->books->each(function($book) {
+    echo "ID: {$book->id}, title: {$book->title}\n";
 });
 
-foreach ($obj->books as $obj) {
-    echo "ID: {$obj->id}, title: {$obj->title}\n";
+foreach ($obj->books as $book) {
+    echo "ID: {$book->id}, title: {$book->title}\n";
 }
 ```
 
@@ -129,12 +134,28 @@ If you have a single item, it still works.
 Since `ArrayObject` implements an Iterator interface, you can simply `foreach()` over the object.  This works for single items or collections.
 
 ```php
-foreach ($obj->books as $obj) {
-    echo "ID: {$obj->id}, title: {$obj->title}\n";
+foreach ($obj->books as $book) {
+    echo "ID: {$book->id}, title: {$book->title}\n";
 }
 ```
 
 #### pluck($key)
+
+Returns a new collection which contains the plucked property.
+
+```php
+$titles = $obj->books->pluck('title');  // ArrayObject
+$arr = $titles->toArray();  // ['1984', 'Pride and Prejudice']
+```
+
+#### pluckArray($key)
+
+Returns a new array of the plucked property.
+This provides a shortcut from `pluck($key)->toArray()`:
+
+```php
+$arr = $obj->books->pluckArray('title');  // ['1984', 'Pride and Prejudice']
+```
 
 #### count()
 
@@ -143,25 +164,30 @@ You can call count off any node:
 ```php
 $obj->count(); // 1
 $obj->books->count(); // 2
-$obj->books[0]->count();
+$obj->books[0]->count(); // 1
 ```
+Note: When called on a single item (ie. not a collection), it will return 1.
 
 #### hasItems()
 
+Returns true when the collection contains at least one item.
+
 ```php
-$obj->hasItems();   // boolean indicating if count() > 0
+$obj->hasItems();
 ```
 
-#### filter(callback|array $conditions)
+Note: When called on a single item (ie. not a collection), it will return true
 
-Apply either a callback, or an array of where conditions, and only return items that match.
+#### filter(callback|array $filter)
+
+Apply either a callback, or an array of "where" conditions, and only return items that match.
 
 Using a callback, each item is an instance of ArrayObject:
 
 ```php
 // Only return items with a title
-$filteredBooksWithTitle = $obj->books->filter(function($item) {
-  return $item->has('title');
+$filteredBooksWithTitle = $obj->books->filter(function($book) {
+  return $book->has('title');
 });
 ```
 

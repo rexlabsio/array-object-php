@@ -9,6 +9,13 @@ use RexSoftware\ArrayObject\Exceptions\InvalidPropertyException;
 use RexSoftware\ArrayObject\Exceptions\JsonDecodeException;
 use RexSoftware\ArrayObject\Exceptions\JsonEncodeException;
 
+/**
+ * ArrayObject
+ * @author Jodie Dunlop <jodie.dunlop@rexsoftware.com.au>
+ * @copyright (c) 2018 Rex Software Pty Ltd.
+** @license MIT
+ * @package RexSoftware\ArrayObject
+ */
 class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \IteratorAggregate
 {
     /** @var array */
