@@ -38,7 +38,7 @@
   "scripts": {
     "test": "phpunit",
     "tests": "phpunit",
-    "coverage": "phpunit --coverage-html ./report"
+    "coverage": "phpunit --coverage-html ./tests/report"
   },
   "license": "MIT",
   "authors": [

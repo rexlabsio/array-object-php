@@ -11,16 +11,13 @@ use RexSoftware\ArrayObject\Exceptions\JsonEncodeException;
 
 class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \IteratorAggregate
 {
-    /** @var ArrayObjectInterface */
-    protected $parent;
-
     /** @var array */
     protected $data;
 
     /** @var bool */
     protected $isCollection;
 
-    public function __construct(array $data, ArrayObjectInterface $parent = null)
+    public function __construct(array $data)
     {
         $this->data = $data;
         $this->isCollection = true;
@@ -80,18 +77,6 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Return a plain value or coerce into a Node or Collection object
-     * @param mixed $val
-     * @return array|mixed
-     */
-    protected function unbox($val)
-    {
-        return $val instanceof ArrayObjectInterface ?
-            $val->toArray() :
-            $val;
-    }
-
-    /**
      * @param array $array
      * @return static
      */
@@ -124,7 +109,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
         }
 
         // Non-collection
-        return CollectionUtility::pluck($this->data, $key);
+        return CollectionUtility::pluck([$this->data], $key);
     }
 
     /**
@@ -134,9 +119,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
      */
     public function filter($filter): ArrayObjectInterface
     {
-        return \is_callable($filter, true) ?
-            $this->filterCallback($filter) :
-            $this->filterConditions($filter);
+        return \is_callable($filter, true) ? $this->filterCallback($filter) : $this->filterConditions($filter);
     }
 
     /**
@@ -146,14 +129,16 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
      */
     public function filterCallback(callable $fn): ArrayObjectInterface
     {
-        return new static(array_filter($this->isCollection() ? $this->data : [$this->data], $fn));
+        return new static(array_values(array_filter(array_map(function ($data) {
+                return $this->box($data);
+            }, $this->isCollection() ? $this->data : [$this->$this->data]), $fn)));
     }
 
     /**
      * Return a new collection by filtering the data against a list of conditions
-     * @param array $conditions
+     * @param array  $conditions
      * @param string $matchType
-     * @param bool $preserveKeys
+     * @param bool   $preserveKeys
      * @return ArrayObjectInterface
      */
     public function filterConditions(
@@ -192,36 +177,17 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Return the total number of elements
-     * @return int
-     */
-    public function count()
-    {
-        return $this->isCollection() ? \count($this->data) : 1;
-    }
-
-    /**
-     * Determine if there are any more items in this array
-     * @return bool
-     */
-    public function hasItems(): bool
-    {
-        return $this->count() > 0;
-    }
-
-    /**
      * @param string $key
      * @return mixed
      * @throws \RexSoftware\ArrayObject\Exceptions\InvalidPropertyException
      */
     public function getOrFail($key)
     {
-        $result = ArrayUtility::dotRead($this->data, $this->getNormalizedKey($key));
-        if ($result === null) {
+        if (!ArrayUtility::dotExists($this->data, $this->getNormalizedKey($key))) {
             throw new InvalidPropertyException("Missing property '$key'");
         }
 
-        return $this->box($result);
+        return $this->get($key);
     }
 
     /**
@@ -240,11 +206,18 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * @return ArrayObjectInterface|null
+     * @param string $key
+     * @param mixed  $default
+     * @return mixed
      */
-    public function parent()
+    public function get($key, $default = null)
     {
-        return $this->parent;
+        $result = ArrayUtility::dotRead($this->data, $this->getNormalizedKey($key));
+        if ($result === null) {
+            return $default;
+        }
+
+        return $this->box($result);
     }
 
     /**
@@ -264,21 +237,6 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * @param string $key
-     * @param mixed  $default
-     * @return mixed
-     */
-    public function get($key, $default = null)
-    {
-        $result = ArrayUtility::dotRead($this->data, $this->getNormalizedKey($key));
-        if ($result === null) {
-            return $default;
-        }
-
-        return $this->box($result);
-    }
-
-    /**
      * @param string|mixed $key
      * @param mixed        $value
      * @param bool         $onlyIfExists
@@ -289,7 +247,8 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
         if ($onlyIfExists && !$this->has($key)) {
             return $this;
         }
-        ArrayUtility::dotMutate($this->data, $key, $this->unbox($value));
+        $unboxedValue = $this->unbox($value);
+        ArrayUtility::dotMutate($this->data, $key, $unboxedValue);
 
         return $this;
     }
@@ -302,6 +261,16 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     public function has($key): bool
     {
         return ArrayUtility::dotRead($this->data, $this->getNormalizedKey($key)) !== null;
+    }
+
+    /**
+     * Return a plain value or coerce into a Node or Collection object
+     * @param mixed $val
+     * @return array|mixed
+     */
+    protected function unbox($val)
+    {
+        return $val instanceof ArrayObjectInterface ? $val->toArray() : $val;
     }
 
     /**
@@ -329,6 +298,24 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
             $this->isCollection = true;
             $this->data = [$this->data];
         }
+    }
+
+    /**
+     * Determine if there are any more items in this array
+     * @return bool
+     */
+    public function hasItems(): bool
+    {
+        return $this->count() > 0;
+    }
+
+    /**
+     * Return the total number of elements
+     * @return int
+     */
+    public function count()
+    {
+        return $this->isCollection() ? \count($this->data) : 1;
     }
 
     /**
@@ -432,9 +419,15 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     public function offsetUnset($offset)
     {
         if (!$this->isCollection()) {
-            throw new InvalidOffsetException('Cannot set a value by offset on a node that is node a collection');
+            $this->forceCollection();
+        }
+        if (!isset($this->data[$offset])) {
+            throw new InvalidOffsetException('Cannot unset value of collection at index ' . $offset);
         }
         unset($this->data[$offset]);
+
+        // Fix indexes
+        $this->data = array_values($this->data);
     }
 
     /**
@@ -478,15 +471,5 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     public function __toString()
     {
         return json_encode($this->toArray());
-    }
-
-    /**
-     * Convert an array to either a Node or a Collection object
-     * @param array $array
-     * @return ArrayObjectInterface
-     */
-    protected function toArrayObject(array $array): ArrayObjectInterface
-    {
-        return new static($array);
     }
 }

@@ -4,7 +4,9 @@ namespace RexSoftware\ArrayObject\Test;
 use PHPUnit\Framework\TestCase;
 use RexSoftware\ArrayObject\ArrayObject;
 use RexSoftware\ArrayObject\ArrayObjectInterface;
+use RexSoftware\ArrayObject\Exceptions\InvalidOffsetException;
 use RexSoftware\ArrayObject\Exceptions\InvalidPropertyException;
+use RexSoftware\ArrayObject\Exceptions\JsonDecodeException;
 
 class ArrayObjectTest extends TestCase
 {
@@ -48,6 +50,7 @@ class ArrayObjectTest extends TestCase
 
     public function test_from_json()
     {
+        // Associative
         $obj = ArrayObject::fromJson(json_encode([
             'id' => 1234,
             'subject' => 'hello',
@@ -56,6 +59,17 @@ class ArrayObjectTest extends TestCase
             'id' => 1234,
             'subject' => 'hello',
         ], $obj->toArray());
+
+        // Sequential array
+        $obj = ArrayObject::fromJson(json_encode(['one', 2, 'three']));
+        $this->assertArraySubset(['one', 2, 'three'], $obj->toArray());
+
+        // Empty array
+        $obj = ArrayObject::fromJson(json_encode(null));
+        $this->assertEmpty($obj->toArray());
+
+        $this->expectException(JsonDecodeException::class);
+        ArrayObject::fromJson('x');
     }
 
     public function test_from_json_collection()
@@ -150,6 +164,8 @@ class ArrayObjectTest extends TestCase
         $obj->getOrFail('invalid_key');
         $this->expectException(InvalidPropertyException::class);
         $obj->getOrFail('sub.invalid_key');
+
+        $this->assertEquals(2, $obj->getOrFail('sub.x'));
     }
 
     public function test_to_array_returns_same_array()
@@ -232,8 +248,27 @@ class ArrayObjectTest extends TestCase
             }
             $count++;
         });
-
         $this->assertEquals(2, $count);
+
+    }
+
+    public function test_single_item_each()
+    {
+        $obj = ArrayObject::fromArray([
+            'id' => 1,
+            'subject' => 'Hello',
+
+        ]);
+
+        $count = 0;
+        $obj->each(function (ArrayObjectInterface $obj) use (&$count) {
+            $this->assertEquals([
+                'id' => 1,
+                'subject' => 'Hello',
+            ], $obj->toArray());
+            $count++;
+        });
+        $this->assertEquals(1, $count);
 
     }
 
@@ -268,6 +303,14 @@ class ArrayObjectTest extends TestCase
         $this->assertCount(2, $plucked);
         $this->assertEquals(50, $plucked[0]->x);
         $this->assertEquals(1, $plucked[1]->x);
+
+        $plucked = ArrayObject::fromArray(['id' => 100, 'subject' => 'Single item'])->pluckArray('id');
+        $this->assertTrue(\is_array($plucked));
+        $this->assertEquals([100], $plucked);
+
+        $plucked = $obj->pluck('subject');
+        $this->assertInstanceOf(ArrayObject::class, $plucked);
+        $this->assertTrue($plucked->isCollection());
     }
 
     public function test_filter()
@@ -299,12 +342,20 @@ class ArrayObjectTest extends TestCase
             ],
         ]);
 
+        // Filter on condition
         $filteredCollection = $obj->filter(['sub.x' => 1]);
         $this->assertInstanceOf(ArrayObjectInterface::class, $filteredCollection);
         $this->assertCount(2, $filteredCollection); // Implements \Countable
-
         // Property resolution resolves to the first node in the collection
         $this->assertEquals(2, $filteredCollection->id);
+
+        // Filter via callback
+        $filteredCollection = $obj->filter(function (ArrayObject $item) {
+            return $item->id >= 2;
+        });
+        $this->assertCount(2, $filteredCollection);
+        $this->assertEquals(2, $filteredCollection[0]->id);
+        $this->assertEquals(3, $filteredCollection[1]->id);
 
     }
 
@@ -499,7 +550,7 @@ class ArrayObjectTest extends TestCase
         $this->assertEmpty($obj[2]);
     }
 
-    public function test_first_on_collection()
+    public function test_first_returns_first_item()
     {
         $obj = ArrayObject::fromArray([
             [
@@ -528,6 +579,8 @@ class ArrayObjectTest extends TestCase
             ],
         ]);
 
+        $first = $obj->first();
+        $this->assertInstanceOf(ArrayObject::class, $first);
         $this->assertEquals([
             'id' => 1,
             'subject' => 'Hello',
@@ -535,7 +588,19 @@ class ArrayObjectTest extends TestCase
                 'x' => 50,
                 'y' => 100,
             ],
-        ], $obj->first()->toArray());
+        ], $first->toArray());
+
+        // Individual item
+        $first = $first->first();
+        $this->assertInstanceOf(ArrayObject::class, $first);
+        $this->assertEquals([
+            'id' => 1,
+            'subject' => 'Hello',
+            'sub' => [
+                'x' => 50,
+                'y' => 100,
+            ],
+        ], $first->toArray());
     }
 
     public function test_last_on_collection()
@@ -567,6 +632,8 @@ class ArrayObjectTest extends TestCase
             ],
         ]);
 
+        $last = $obj->last();
+        $this->assertInstanceOf(ArrayObject::class, $last);
         $this->assertEquals([
             'id' => 3,
             'subject' => 'Welcome Back',
@@ -574,7 +641,18 @@ class ArrayObjectTest extends TestCase
                 'x' => 1,
                 'y' => 2,
             ],
-        ], $obj->last()->toArray());
+        ], $last->toArray());
+
+        $last = $last->last();
+        $this->assertInstanceOf(ArrayObject::class, $last);
+        $this->assertEquals([
+            'id' => 3,
+            'subject' => 'Welcome Back',
+            'sub' => [
+                'x' => 1,
+                'y' => 2,
+            ],
+        ], $last->toArray());
     }
 
     public function test_collection_iterator()
@@ -605,10 +683,434 @@ class ArrayObjectTest extends TestCase
                 ],
             ],
         ]);
-        foreach ($obj as $obj) {
-            $this->assertInstanceOf(ArrayObject::class, $obj);
-            $this->assertTrue($obj->has('id'));
+        foreach ($obj as $childObj) {
+            $this->assertInstanceOf(ArrayObject::class, $childObj);
+            $this->assertTrue($childObj->has('id'));
         }
     }
 
+    public function test_can_set_via_array_access()
+    {
+        $obj = ArrayObject::fromArray([
+            [
+                'id' => 1,
+                'subject' => 'Hello',
+                'sub' => [
+                    'x' => 50,
+                    'y' => 100,
+                ],
+            ],
+            [
+                'id' => 2,
+                'subject' => 'Goodbye!',
+                'sub' => [
+                    'x' => 1,
+                    'y' => 2,
+                ],
+            ],
+            [
+                'id' => 3,
+                'subject' => 'Welcome Back',
+                'sub' => [
+                    'x' => 1,
+                    'y' => 2,
+                ],
+            ],
+        ]);
+        $obj[0] = $obj[0]->set('subject', 'Goodbye!');
+        $obj[1] = $obj[1]->set('subject', 'Hello');
+        $obj[2] = $obj[0];
+        $this->assertEquals([
+            [
+                'id' => 1,
+                'subject' => 'Goodbye!',
+                'sub' => [
+                    'x' => 50,
+                    'y' => 100,
+                ],
+            ],
+            [
+                'id' => 2,
+                'subject' => 'Hello',
+                'sub' => [
+                    'x' => 1,
+                    'y' => 2,
+                ],
+            ],
+            [
+                'id' => 1,
+                'subject' => 'Goodbye!',
+                'sub' => [
+                    'x' => 50,
+                    'y' => 100,
+                ],
+            ],
+        ], $obj->toArray());
+    }
+
+    public function test_has_items()
+    {
+        $obj = ArrayObject::fromArray([
+            [
+                'id' => 1,
+                'subject' => 'Hello',
+                'sub' => [
+                    'x' => 50,
+                    'y' => 100,
+                ],
+            ],
+            [
+                'id' => 2,
+                'subject' => 'Goodbye!',
+                'sub' => [
+                    'x' => 1,
+                    'y' => 2,
+                ],
+            ],
+            [
+                'id' => 3,
+                'subject' => 'Welcome Back',
+                'sub' => [
+                    'x' => 1,
+                    'y' => 2,
+                ],
+            ],
+        ]);
+        $this->assertTrue($obj->hasItems());
+
+        // Pop off all items
+        $obj->pop();
+        $obj->pop();
+        $obj->pop();
+        $this->assertFalse($obj->hasItems());
+
+        // Empty Array
+        $this->assertFalse(ArrayObject::fromArray([])->hasItems());
+
+        // Associative array
+        $this->assertTrue(ArrayObject::fromArray([
+            'id' => 3,
+            'subject' => 'Welcome Back',
+            'sub' => [
+                'x' => 1,
+                'y' => 2,
+            ],
+        ])->hasItems());
+    }
+
+    public function test_shift()
+    {
+        $books = ArrayObject::fromArray([
+            [
+                'id' => 1,
+                'title' => '1984',
+                'author' => 'George Orwell',
+            ],
+            [
+                'id' => 2,
+                'title' => 'Pride and Prejudice',
+                'author' => 'Jane Austen',
+            ],
+        ]);
+        $book = $books->shift();
+        $this->assertInstanceOf(ArrayObject::class, $book);
+        $this->assertEquals([
+            'id' => 1,
+            'title' => '1984',
+            'author' => 'George Orwell',
+        ], $book->toArray());
+        $this->assertCount(1, $books);
+
+        $book = $books->shift();
+        $this->assertInstanceOf(ArrayObject::class, $book);
+        $this->assertEquals([
+            'id' => 2,
+            'title' => 'Pride and Prejudice',
+            'author' => 'Jane Austen',
+        ], $book->toArray());
+        $this->assertCount(0, $books);
+
+        // Book is not currently a collection, but it will be converted internally
+        $newBook = $book->shift();
+        $this->assertEquals([
+            'id' => 2,
+            'title' => 'Pride and Prejudice',
+            'author' => 'Jane Austen',
+        ], $newBook->toArray());
+        $this->assertFalse($book->hasItems());
+
+        $this->expectException(InvalidOffsetException::class);
+        $result = $books->shift();
+    }
+
+    public function test_pop()
+    {
+        $books = ArrayObject::fromArray([
+            [
+                'id' => 1,
+                'title' => '1984',
+                'author' => 'George Orwell',
+            ],
+            [
+                'id' => 2,
+                'title' => 'Pride and Prejudice',
+                'author' => 'Jane Austen',
+            ],
+        ]);
+
+        $book = $books->pop();
+        $this->assertInstanceOf(ArrayObject::class, $book);
+        $this->assertEquals([
+            'id' => 2,
+            'title' => 'Pride and Prejudice',
+            'author' => 'Jane Austen',
+        ], $book->toArray());
+        $this->assertCount(1, $books);
+
+        $book = $books->pop();
+        $this->assertInstanceOf(ArrayObject::class, $book);
+        $this->assertEquals([
+            'id' => 1,
+            'title' => '1984',
+            'author' => 'George Orwell',
+        ], $book->toArray());
+        $this->assertCount(0, $books);
+
+        $this->expectException(InvalidOffsetException::class);
+        $result = $books->pop();
+    }
+
+    public function test_unshift()
+    {
+        $books = ArrayObject::fromArray([
+            [
+                'id' => 1,
+                'title' => '1984',
+                'author' => 'George Orwell',
+            ],
+            [
+                'id' => 2,
+                'title' => 'Pride and Prejudice',
+                'author' => 'Jane Austen',
+            ],
+        ]);
+
+        $books->unshift([
+            'id' => 3,
+            'title' => 'To Kill a Mockingbird',
+            'author' => 'Harper Lee',
+        ]);
+        $this->assertCount(3, $books);
+        $this->assertEquals([
+            'id' => 3,
+            'title' => 'To Kill a Mockingbird',
+            'author' => 'Harper Lee',
+        ], $books->first()->toArray());
+
+        $books->unshift([
+            'id' => 4,
+            'title' => 'The Great Gatsby',
+            'author' => 'F. Scott Fitzgerald',
+        ]);
+        $this->assertCount(4, $books);
+        $this->assertEquals([
+            'id' => 4,
+            'title' => 'The Great Gatsby',
+            'author' => 'F. Scott Fitzgerald',
+        ], $books->first()->toArray());
+
+        $book = $books->first();
+        $this->assertFalse($book->isCollection());
+        $book->unshift([
+            'id' => 1,
+            'title' => '1984',
+            'author' => 'George Orwell',
+        ]);
+        // Automatic conversion to collection
+        $this->assertTrue($book->isCollection());
+        $this->assertCount(2, $book);
+    }
+
+    public function test_push()
+    {
+        $books = ArrayObject::fromArray([
+            [
+                'id' => 1,
+                'title' => '1984',
+                'author' => 'George Orwell',
+            ],
+            [
+                'id' => 2,
+                'title' => 'Pride and Prejudice',
+                'author' => 'Jane Austen',
+            ],
+        ]);
+
+        $books->push([
+            'id' => 3,
+            'title' => 'To Kill a Mockingbird',
+            'author' => 'Harper Lee',
+        ]);
+        $this->assertCount(3, $books);
+        $this->assertEquals([
+            'id' => 3,
+            'title' => 'To Kill a Mockingbird',
+            'author' => 'Harper Lee',
+        ], $books->last()->toArray());
+
+        $books->push([
+            'id' => 4,
+            'title' => 'The Great Gatsby',
+            'author' => 'F. Scott Fitzgerald',
+        ]);
+        $this->assertCount(4, $books);
+        $this->assertEquals([
+            'id' => 4,
+            'title' => 'The Great Gatsby',
+            'author' => 'F. Scott Fitzgerald',
+        ], $books->last()->toArray());
+
+        $book = $books->last();
+        $this->assertFalse($book->isCollection());
+        $book->unshift([
+            'id' => 1,
+            'title' => '1984',
+            'author' => 'George Orwell',
+        ]);
+        // Automatic conversion to collection
+        $this->assertTrue($book->isCollection());
+        $this->assertCount(2, $book);
+    }
+
+    public function test_unset()
+    {
+        $books = ArrayObject::fromArray([
+            [
+                'id' => 1,
+                'title' => '1984',
+                'author' => 'George Orwell',
+            ],
+            [
+                'id' => 2,
+                'title' => 'Pride and Prejudice',
+                'author' => 'Jane Austen',
+            ],
+        ]);
+
+        unset($books[0]);
+        $this->assertTrue($books->isCollection());
+        $this->assertCount(1, $books);
+
+        unset($books[0]);
+        $this->assertTrue($books->isCollection());
+        $this->assertCount(0, $books);
+        $this->assertFalse($books->hasItems());
+
+        $book = ArrayObject::fromArray([
+            'id' => 1,
+            'title' => '1984',
+            'author' => 'George Orwell',
+        ]);
+        $this->assertFalse($book->isCollection());
+        unset($book[0]);
+        $this->assertTrue($book->isCollection());
+        $this->assertCount(0, $book);
+
+        $this->expectException(InvalidOffsetException::class);
+        unset($books[0]);
+
+    }
+
+    public function test_to_json()
+    {
+        $books = ArrayObject::fromArray([
+            [
+                'id' => 1,
+                'title' => '1984',
+                'author' => 'George Orwell',
+            ],
+            [
+                'id' => 2,
+                'title' => 'Pride and Prejudice',
+                'author' => 'Jane Austen',
+            ],
+        ]);
+        $this->assertEquals(json_encode([
+            [
+                'id' => 1,
+                'title' => '1984',
+                'author' => 'George Orwell',
+            ],
+            [
+                'id' => 2,
+                'title' => 'Pride and Prejudice',
+                'author' => 'Jane Austen',
+            ],
+        ]), $books->toJson());
+    }
+
+    public function test_string_casting()
+    {
+        $books = ArrayObject::fromArray([
+            [
+                'id' => 1,
+                'title' => '1984',
+                'author' => 'George Orwell',
+            ],
+            [
+                'id' => 2,
+                'title' => 'Pride and Prejudice',
+                'author' => 'Jane Austen',
+            ],
+        ]);
+        $this->assertEquals(json_encode([
+            [
+                'id' => 1,
+                'title' => '1984',
+                'author' => 'George Orwell',
+            ],
+            [
+                'id' => 2,
+                'title' => 'Pride and Prejudice',
+                'author' => 'Jane Austen',
+            ],
+        ]), (string)$books);
+    }
+
+    public function test_magic_set()
+    {
+        $book = ArrayObject::fromArray([
+            'id' => 1,
+            'title' => '1984',
+            'author' => 'George Orwell',
+        ]);
+        $book->id = 2;
+        $this->assertEquals(2, $book->id);
+    }
+
+    public function test_set_with_only_exists_option()
+    {
+        $book = ArrayObject::fromArray([
+            'id' => 1,
+            'title' => '1984',
+            'author' => 'George Orwell',
+        ]);
+        $book->set('id', 3);
+        $this->assertEquals(3, $book->id);
+        $book->set('new_field', 'new_value');
+        $this->assertTrue($book->has('new_field'));
+        $book->set('another_field', 'another_value', true);
+        $this->assertFalse($book->has('another_field'));
+    }
+
+    public function test_isset()
+    {
+        $book = ArrayObject::fromArray([
+            'id' => 1,
+            'title' => '1984',
+            'author' => 'George Orwell',
+        ]);
+        $this->assertTrue(isset($book->id));
+        $this->assertFalse(isset($book->missing_field));
+    }
 }

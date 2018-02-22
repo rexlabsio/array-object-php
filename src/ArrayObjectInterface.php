@@ -1,7 +1,6 @@
 <?php
 namespace RexSoftware\ArrayObject;
 
-
 interface ArrayObjectInterface
 {
     /**
@@ -49,17 +48,13 @@ interface ArrayObjectInterface
     public function has($key): bool;
 
     /**
-     * @return ArrayObjectInterface|null
-     */
-    public function parent();
-    /**
      * @param callable $callback
      * @return $this
      */
     public function each(callable $callback);
 
     /**
-     * @param mixed $conditions
+     * @param mixed $filter
      * @return ArrayObjectInterface|null
      */
     public function filter($filter);
