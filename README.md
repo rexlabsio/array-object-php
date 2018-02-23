@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/rexlabsio/array-object-php.svg?branch=master)](https://travis-ci.org/rexlabsio/array-object-php)
 
-ArrayObject is a  light-weight interface for working fluently with array's. 
+ArrayObject is a light-weight interface for working fluently with array's. 
 
 ArrayObject provides a wrapper around PHP's built-in `array` type which includes methods for filtering, and retrieving items, and conveniently treats individual items and collections as the same object.
 
@@ -13,7 +13,7 @@ License: MIT
 ## Installation
 
 ```bash
-composer require rexsoftware/array-object
+composer require rexlabs/array-object
 ```
 
 ## Dependencies

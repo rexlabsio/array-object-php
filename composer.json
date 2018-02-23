@@ -1,5 +1,5 @@
 {
-  "name": "rexsoftware/array-object",
+  "name": "rexlabs/array-object",
   "description": "Provides an interface for simplifying working with associative and sequential arrays (collections).",
   "keywords": [
     "array",
@@ -27,12 +27,12 @@
   },
   "autoload": {
     "psr-4": {
-      "RexSoftware\\ArrayObject\\": "src/"
+      "Rexlabs\\ArrayObject\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "RexSoftware\\ArrayObject\\Test\\": "tests/"
+      "Rexlabs\\ArrayObject\\Test\\": "tests/"
     }
   },
   "scripts": {

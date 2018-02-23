@@ -1,5 +1,5 @@
 <?php
-namespace RexSoftware\ArrayObject\Exceptions;
+namespace Rexlabs\ArrayObject\Exceptions;
 
 class InvalidOffsetException extends \OutOfBoundsException implements ArrayObjectException
 {

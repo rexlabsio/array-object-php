@@ -1,13 +1,13 @@
 <?php
-namespace RexSoftware\ArrayObject\Test;
+namespace Rexlabs\ArrayObject\Test;
 
 use PHPUnit\Framework\TestCase;
-use RexSoftware\ArrayObject\ArrayObject;
-use RexSoftware\ArrayObject\ArrayObjectInterface;
-use RexSoftware\ArrayObject\Exceptions\InvalidOffsetException;
-use RexSoftware\ArrayObject\Exceptions\InvalidPropertyException;
-use RexSoftware\ArrayObject\Exceptions\JsonDecodeException;
-use RexSoftware\ArrayObject\Exceptions\JsonEncodeException;
+use Rexlabs\ArrayObject\ArrayObject;
+use Rexlabs\ArrayObject\ArrayObjectInterface;
+use Rexlabs\ArrayObject\Exceptions\InvalidOffsetException;
+use Rexlabs\ArrayObject\Exceptions\InvalidPropertyException;
+use Rexlabs\ArrayObject\Exceptions\JsonDecodeException;
+use Rexlabs\ArrayObject\Exceptions\JsonEncodeException;
 
 class ArrayObjectTest extends TestCase
 {

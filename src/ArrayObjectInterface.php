@@ -1,5 +1,5 @@
 <?php
-namespace RexSoftware\ArrayObject;
+namespace Rexlabs\ArrayObject;
 
 interface ArrayObjectInterface
 {

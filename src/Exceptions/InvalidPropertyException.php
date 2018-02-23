@@ -1,5 +1,5 @@
 <?php
-namespace RexSoftware\ArrayObject\Exceptions;
+namespace Rexlabs\ArrayObject\Exceptions;
 
 class InvalidPropertyException extends \RuntimeException implements ArrayObjectException
 {

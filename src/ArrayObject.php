@@ -1,20 +1,20 @@
 <?php
-namespace RexSoftware\ArrayObject;
+namespace Rexlabs\ArrayObject;
 
 use ArrayIterator;
 use BkvFoundry\UtilityBelt\ArrayUtility;
 use BkvFoundry\UtilityBelt\CollectionUtility;
-use RexSoftware\ArrayObject\Exceptions\InvalidOffsetException;
-use RexSoftware\ArrayObject\Exceptions\InvalidPropertyException;
-use RexSoftware\ArrayObject\Exceptions\JsonDecodeException;
-use RexSoftware\ArrayObject\Exceptions\JsonEncodeException;
+use Rexlabs\ArrayObject\Exceptions\InvalidOffsetException;
+use Rexlabs\ArrayObject\Exceptions\InvalidPropertyException;
+use Rexlabs\ArrayObject\Exceptions\JsonDecodeException;
+use Rexlabs\ArrayObject\Exceptions\JsonEncodeException;
 
 /**
  * ArrayObject
  * @author Jodie Dunlop <jodie.dunlop@rexsoftware.com.au>
  * @copyright (c) 2018 Rex Software Pty Ltd.
 ** @license MIT
- * @package RexSoftware\ArrayObject
+ * @package Rexlabs\ArrayObject
  */
 class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \IteratorAggregate
 {
@@ -38,7 +38,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
      * @param string|mixed $json
      * @param int          $options
      * @return static
-     * @throws \RexSoftware\ArrayObject\Exceptions\JsonDecodeException
+     * @throws \Rexlabs\ArrayObject\Exceptions\JsonDecodeException
      */
     public static function fromJson($json, int $options = 0)
     {
@@ -186,7 +186,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     /**
      * @param string $key
      * @return mixed
-     * @throws \RexSoftware\ArrayObject\Exceptions\InvalidPropertyException
+     * @throws \Rexlabs\ArrayObject\Exceptions\InvalidPropertyException
      */
     public function getOrFail($key)
     {
@@ -284,7 +284,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
      * Pull the first item off the collection.
      * If the underlying data is not a collection, it will be converted to one.
      * @return mixed
-     * @throws \RexSoftware\ArrayObject\Exceptions\InvalidOffsetException
+     * @throws \Rexlabs\ArrayObject\Exceptions\InvalidOffsetException
      */
     public function shift()
     {
@@ -330,7 +330,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
      * If the underlying data is not a collection, it will be converted to one.
      * @param array $values
      * @return mixed
-     * @throws \RexSoftware\ArrayObject\Exceptions\InvalidOffsetException
+     * @throws \Rexlabs\ArrayObject\Exceptions\InvalidOffsetException
      */
     public function unshift(...$values)
     {
@@ -360,7 +360,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
      * Pull the last item off the end of the collection.
      * If the underlying data is not a collection, it will be converted to one.
      * @return mixed
-     * @throws \RexSoftware\ArrayObject\Exceptions\InvalidOffsetException
+     * @throws \Rexlabs\ArrayObject\Exceptions\InvalidOffsetException
      */
     public function pop()
     {
@@ -382,7 +382,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
 
     /**
      * @inheritdoc
-     * @throws \RexSoftware\ArrayObject\Exceptions\InvalidOffsetException
+     * @throws \Rexlabs\ArrayObject\Exceptions\InvalidOffsetException
      */
     public function offsetGet($offset)
     {
@@ -406,7 +406,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
 
     /**
      * @inheritdoc
-     * @throws \RexSoftware\ArrayObject\Exceptions\InvalidOffsetException
+     * @throws \Rexlabs\ArrayObject\Exceptions\InvalidOffsetException
      */
     public function offsetSet($offset, $value)
     {
@@ -422,7 +422,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
 
     /**
      * @inheritdoc
-     * @throws \RexSoftware\ArrayObject\Exceptions\InvalidOffsetException
+     * @throws \Rexlabs\ArrayObject\Exceptions\InvalidOffsetException
      */
     public function offsetUnset($offset)
     {
@@ -451,7 +451,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     /**
      * @param int $options
      * @return string|mixed
-     * @throws \RexSoftware\ArrayObject\Exceptions\JsonEncodeException
+     * @throws \Rexlabs\ArrayObject\Exceptions\JsonEncodeException
      */
     public function toJson(int $options = 0)
     {
