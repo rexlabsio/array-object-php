@@ -26,7 +26,7 @@ composer require rexlabs/array-object
 ```php
 <?php
 require 'vendor/autoload.php';
-use RexSoftware\ArrayObject;
+use Rexlabs\ArrayObject;
 
 // Initialise from an Array
 $obj = ArrayObject::fromArray([...]);
