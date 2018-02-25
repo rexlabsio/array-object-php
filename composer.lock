@@ -4,33 +4,33 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "95be6213507cafa263a40bd2228e7036",
+    "content-hash": "c439e3776d486866c3414e09268ce71d",
     "packages": [
         {
-            "name": "bkvfoundry/utility-belt",
-            "version": "2.2.1",
+            "name": "rexlabs/utility-belt",
+            "version": "3.0.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/bkvfoundry/utility-belt.git",
-                "reference": "bbe0b4f213254b610629927dab02b11471a51013"
+                "url": "https://github.com/rexlabsio/utility-belt-php.git",
+                "reference": "bf561c251a7aa67ec0eee7e4721fdefb10f4a6de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/bkvfoundry/utility-belt/zipball/bbe0b4f213254b610629927dab02b11471a51013",
-                "reference": "bbe0b4f213254b610629927dab02b11471a51013",
+                "url": "https://api.github.com/repos/rexlabsio/utility-belt-php/zipball/bf561c251a7aa67ec0eee7e4721fdefb10f4a6de",
+                "reference": "bf561c251a7aa67ec0eee7e4721fdefb10f4a6de",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.5 || ^7.0"
+                "php": "^7.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "^5.0",
-                "satooshi/php-coveralls": "^0.6.1"
+                "phpunit/phpunit": "^6.5",
+                "satooshi/php-coveralls": "^2.0"
             },
             "type": "library",
             "autoload": {
                 "psr-4": {
-                    "BkvFoundry\\UtilityBelt\\": "src/"
+                    "Rexlabs\\UtilityBelt\\": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -56,7 +56,7 @@
                 "utilities",
                 "utility"
             ],
-            "time": "2018-02-17T02:31:02+00:00"
+            "time": "2018-02-25T23:34:01+00:00"
         }
     ],
     "packages-dev": [
