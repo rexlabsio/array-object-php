@@ -19,7 +19,7 @@ composer require rexlabs/array-object
 ## Dependencies
 
 - PHP 7.0 (or greater)
-- `bkvfoundry/utility-belt`
+- `rexlabs/utility-belt:^3.0`
 
 ## Usage
 
