@@ -2,8 +2,8 @@
 namespace Rexlabs\ArrayObject;
 
 use ArrayIterator;
-use BkvFoundry\UtilityBelt\ArrayUtility;
-use BkvFoundry\UtilityBelt\CollectionUtility;
+use Rexlabs\UtilityBelt\ArrayUtility;
+use Rexlabs\UtilityBelt\CollectionUtility;
 use Rexlabs\ArrayObject\Exceptions\InvalidOffsetException;
 use Rexlabs\ArrayObject\Exceptions\InvalidPropertyException;
 use Rexlabs\ArrayObject\Exceptions\JsonDecodeException;

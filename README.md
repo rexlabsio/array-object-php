@@ -26,7 +26,7 @@ composer require rexlabs/array-object
 ```php
 <?php
 require 'vendor/autoload.php';
-use Rexlabs\ArrayObject;
+use Rexlabs\ArrayObject\ArrayObject;
 
 // Initialise from an Array
 $obj = ArrayObject::fromArray([...]);
@@ -42,7 +42,6 @@ $json = $obj->toJson();
 ```
 
 The examples below are based on the follow input data.
-
 
 ```json
 {
@@ -67,6 +66,7 @@ The examples below are based on the follow input data.
 ```php
 $obj->books; // Instance of ArrayObject
 $obj->books->pluckArray('author'); // array [ 'George Orwell', 'Jane Austen' ]
+$obj->pluckArray('books.author'); // array [ 'George Orwell', 'Jane Austen' ]
 $obj->books->count(); // 2
 $obj->books->isCollection(); // true
 $obj->books[0]; // Instance of ArrayObject
@@ -81,14 +81,16 @@ Note: All of the methods gracefully handle treating an individual item as an arr
 The `get()` method allows you to fetch the value of a property, and receive a default if the value does not exist. It also supports depth which is indicated with a `.`:
 
 ```php
+$obj->get('books.0');       // ArrayObject
 $obj->get('books.0.title'); // "1984"
 $obj->get('books.1.title'); // "Pride and Prejudice"
-$obj->get('books.0.missing', 'Defult value'); // "Default value"
+$obj->get('books.0.missing', 'Default value'); // "Default value"
 ```
 
 You can also fetch the properties using object property syntax (we overload `__get()` to achieve this):
 
 ```php
+$obj->books[0];           // ArrayObject
 $obj->books[0]->title;    // "1984"
 $obj->books[1]->title;    // "Pride and Prejudice"
 $obj->books[0]->missing;  // throws InvalidPropertyException
