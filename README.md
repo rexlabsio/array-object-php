@@ -1,14 +1,17 @@
 # Array Object 
 
 [![Build Status](https://travis-ci.org/rexlabsio/array-object-php.svg?branch=master)](https://travis-ci.org/rexlabsio/array-object-php)
+[![Code Coverage](https://scrutinizer-ci.com/g/rexlabsio/array-object-php/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/rexlabsio/array-object-php/?branch=master)
+[![Packagist](https://img.shields.io/packagist/v/rexlabs/array-object.svg)](https://packagist.org/packages/rexlabs/array-object)
 
-ArrayObject is a light-weight interface for working fluently with array's. 
+
+ArrayObject is a PHP library that provides a light-weight interface for working fluently with array's. 
 
 ArrayObject provides a wrapper around PHP's built-in `array` type which includes methods for filtering, and retrieving items, and conveniently treats individual items and collections as the same object.
 
 This is especially useful for working with JSON responses from API requests.
 
-License: MIT
+This library is used by the [Hyper Http Client](https://packagist.org/packages/rexlabs/hyper-http) to make extracting data from responses super intuitive.
 
 ## Installation
 
@@ -61,7 +64,6 @@ The examples below are based on the follow input data.
 ```
 
 ### Basics
-
 
 ```php
 $obj->books; // Instance of ArrayObject
