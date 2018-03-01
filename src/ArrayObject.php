@@ -1,20 +1,21 @@
 <?php
+
 namespace Rexlabs\ArrayObject;
 
 use ArrayIterator;
-use Rexlabs\UtilityBelt\ArrayUtility;
-use Rexlabs\UtilityBelt\CollectionUtility;
 use Rexlabs\ArrayObject\Exceptions\InvalidOffsetException;
 use Rexlabs\ArrayObject\Exceptions\InvalidPropertyException;
 use Rexlabs\ArrayObject\Exceptions\JsonDecodeException;
 use Rexlabs\ArrayObject\Exceptions\JsonEncodeException;
+use Rexlabs\UtilityBelt\ArrayUtility;
+use Rexlabs\UtilityBelt\CollectionUtility;
 
 /**
- * ArrayObject
+ * ArrayObject.
+ *
  * @author Jodie Dunlop <jodie.dunlop@rexsoftware.com.au>
  * @copyright (c) 2018 Rex Software Pty Ltd.
-** @license MIT
- * @package Rexlabs\ArrayObject
+ ** @license MIT
  */
 class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \IteratorAggregate
 {
@@ -37,8 +38,10 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     /**
      * @param string|mixed $json
      * @param int          $options
-     * @return static
+     *
      * @throws \Rexlabs\ArrayObject\Exceptions\JsonDecodeException
+     *
+     * @return static
      */
     public static function fromJson($json, int $options = 0)
     {
@@ -51,8 +54,10 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Fire callback for each member of the array
+     * Fire callback for each member of the array.
+     *
      * @param callable $callback
+     *
      * @return $this
      */
     public function each(callable $callback)
@@ -74,8 +79,10 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Return a plain value or coerce into an ArrayObject
+     * Return a plain value or coerce into an ArrayObject.
+     *
      * @param mixed $val
+     *
      * @return ArrayObjectInterface|mixed
      */
     protected function box($val)
@@ -85,6 +92,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
 
     /**
      * @param array $array
+     *
      * @return static
      */
     public static function fromArray(array $array)
@@ -93,8 +101,10 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Pluck a value by key from each result and return an ArrayObject
+     * Pluck a value by key from each result and return an ArrayObject.
+     *
      * @param $key
+     *
      * @return ArrayObjectInterface
      */
     public function pluck($key): ArrayObjectInterface
@@ -103,8 +113,10 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Pluck a value by key from each result and return an array
+     * Pluck a value by key from each result and return an array.
+     *
      * @param $key
+     *
      * @return array
      */
     public function pluckArray($key): array
@@ -120,8 +132,10 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Return a new collection by filtering data within the current collection
+     * Return a new collection by filtering data within the current collection.
+     *
      * @param mixed $filter
+     *
      * @return ArrayObjectInterface
      */
     public function filter($filter): ArrayObjectInterface
@@ -130,8 +144,10 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Return a new collection by filtering the data via a callback
+     * Return a new collection by filtering the data via a callback.
+     *
      * @param callable|\Closure $fn
+     *
      * @return ArrayObjectInterface
      */
     public function filterCallback(callable $fn): ArrayObjectInterface
@@ -142,10 +158,12 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Return a new collection by filtering the data against a list of conditions
+     * Return a new collection by filtering the data against a list of conditions.
+     *
      * @param array  $conditions
      * @param string $matchType
      * @param bool   $preserveKeys
+     *
      * @return ArrayObjectInterface
      */
     public function filterConditions(
@@ -158,7 +176,8 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Returns the first element in the collection
+     * Returns the first element in the collection.
+     *
      * @return mixed
      */
     public function first()
@@ -171,7 +190,8 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Returns the last element in the collection
+     * Returns the last element in the collection.
+     *
      * @return ArrayObjectInterface|null
      */
     public function last()
@@ -185,8 +205,10 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
 
     /**
      * @param string $key
-     * @return mixed
+     *
      * @throws \Rexlabs\ArrayObject\Exceptions\InvalidPropertyException
+     *
+     * @return mixed
      */
     public function getOrFail($key)
     {
@@ -198,8 +220,10 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Forces key to be prefixed with an offset
+     * Forces key to be prefixed with an offset.
+     *
      * @param $key
+     *
      * @return string
      */
     protected function getNormalizedKey($key): string
@@ -215,6 +239,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     /**
      * @param string $key
      * @param mixed  $default
+     *
      * @return mixed
      */
     public function get($key, $default = null)
@@ -228,7 +253,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __get($key)
     {
@@ -236,7 +261,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __set($name, $value)
     {
@@ -247,6 +272,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
      * @param string|mixed $key
      * @param mixed        $value
      * @param bool         $onlyIfExists
+     *
      * @return $this
      */
     public function set($key, $value, $onlyIfExists = false)
@@ -261,8 +287,10 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Determine if the node contains a property
+     * Determine if the node contains a property.
+     *
      * @param string $key
+     *
      * @return bool
      */
     public function has($key): bool
@@ -271,8 +299,10 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Return a plain value or coerce into a Node or Collection object
+     * Return a plain value or coerce into a Node or Collection object.
+     *
      * @param mixed $val
+     *
      * @return array|mixed
      */
     protected function unbox($val)
@@ -283,8 +313,10 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     /**
      * Pull the first item off the collection.
      * If the underlying data is not a collection, it will be converted to one.
-     * @return mixed
+     *
      * @throws \Rexlabs\ArrayObject\Exceptions\InvalidOffsetException
+     *
+     * @return mixed
      */
     public function shift()
     {
@@ -297,7 +329,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Forces the underlying data-structure to become a collection
+     * Forces the underlying data-structure to become a collection.
      */
     protected function forceCollection()
     {
@@ -308,7 +340,8 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Determine if there are any more items in this array
+     * Determine if there are any more items in this array.
+     *
      * @return bool
      */
     public function hasItems(): bool
@@ -317,7 +350,8 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Return the total number of elements
+     * Return the total number of elements.
+     *
      * @return int
      */
     public function count()
@@ -328,9 +362,12 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     /**
      * Add one or more items at the start of the collection.
      * If the underlying data is not a collection, it will be converted to one.
+     *
      * @param array $values
-     * @return mixed
+     *
      * @throws \Rexlabs\ArrayObject\Exceptions\InvalidOffsetException
+     *
+     * @return mixed
      */
     public function unshift(...$values)
     {
@@ -344,7 +381,9 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     /**
      * Add one or more items to the end of the collection.
      * If the underlying data is not a collection, it will be converted to one.
+     *
      * @param array $values
+     *
      * @return mixed
      */
     public function push(...$values)
@@ -359,8 +398,10 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     /**
      * Pull the last item off the end of the collection.
      * If the underlying data is not a collection, it will be converted to one.
-     * @return mixed
+     *
      * @throws \Rexlabs\ArrayObject\Exceptions\InvalidOffsetException
+     *
+     * @return mixed
      */
     public function pop()
     {
@@ -373,7 +414,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function __isset($name)
     {
@@ -381,13 +422,14 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @throws \Rexlabs\ArrayObject\Exceptions\InvalidOffsetException
      */
     public function offsetGet($offset)
     {
         if (!$this->offsetExists($offset)) {
-            throw new InvalidOffsetException('Invalid offset: ' . $offset);
+            throw new InvalidOffsetException('Invalid offset: '.$offset);
         }
         if ($this->isCollection()) {
             return $this->box($this->data[$offset]);
@@ -397,7 +439,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function offsetExists($offset)
     {
@@ -405,7 +447,8 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @throws \Rexlabs\ArrayObject\Exceptions\InvalidOffsetException
      */
     public function offsetSet($offset, $value)
@@ -416,12 +459,13 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
         if ($this->offsetExists($offset) || $offset === \count($this->data)) {
             $this->data[$offset] = $this->unbox($value);
         } else {
-            throw new InvalidOffsetException('Invalid offset: ' . $offset);
+            throw new InvalidOffsetException('Invalid offset: '.$offset);
         }
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
+     *
      * @throws \Rexlabs\ArrayObject\Exceptions\InvalidOffsetException
      */
     public function offsetUnset($offset)
@@ -430,7 +474,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
             $this->forceCollection();
         }
         if (!isset($this->data[$offset])) {
-            throw new InvalidOffsetException('Cannot unset value of collection at index ' . $offset);
+            throw new InvalidOffsetException('Cannot unset value of collection at index '.$offset);
         }
         unset($this->data[$offset]);
 
@@ -450,8 +494,10 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
 
     /**
      * @param int $options
-     * @return string|mixed
+     *
      * @throws \Rexlabs\ArrayObject\Exceptions\JsonEncodeException
+     *
+     * @return string|mixed
      */
     public function toJson(int $options = 0)
     {
@@ -464,7 +510,8 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Return the original array representation of the array
+     * Return the original array representation of the array.
+     *
      * @return array
      */
     public function toArray(): array
@@ -473,7 +520,8 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
-     * Return a JSON encoded representation of the internal array
+     * Return a JSON encoded representation of the internal array.
+     *
      * @return string
      */
     public function __toString()

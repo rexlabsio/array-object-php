@@ -1,4 +1,5 @@
 <?php
+
 namespace Rexlabs\ArrayObject\Test;
 
 use PHPUnit\Framework\TestCase;
@@ -14,11 +15,11 @@ class ArrayObjectTest extends TestCase
     public function test_from_array()
     {
         $obj = ArrayObject::fromArray([
-            'id' => 1234,
+            'id'      => 1234,
             'subject' => 'hello',
         ]);
         $this->assertArraySubset([
-            'id' => 1234,
+            'id'      => 1234,
             'subject' => 'hello',
         ], $obj->toArray());
     }
@@ -27,11 +28,11 @@ class ArrayObjectTest extends TestCase
     {
         $obj = ArrayObject::fromArray([
             [
-                'id' => 1234,
+                'id'      => 1234,
                 'subject' => 'hello',
             ],
             [
-                'id' => 3456,
+                'id'      => 3456,
                 'subject' => 'bye',
             ],
         ]);
@@ -39,11 +40,11 @@ class ArrayObjectTest extends TestCase
         $this->assertCount(2, $obj);
         $this->assertArraySubset([
             [
-                'id' => 1234,
+                'id'      => 1234,
                 'subject' => 'hello',
             ],
             [
-                'id' => 3456,
+                'id'      => 3456,
                 'subject' => 'bye',
             ],
         ], $obj->toArray());
@@ -53,11 +54,11 @@ class ArrayObjectTest extends TestCase
     {
         // Associative
         $obj = ArrayObject::fromJson(json_encode([
-            'id' => 1234,
+            'id'      => 1234,
             'subject' => 'hello',
         ]));
         $this->assertArraySubset([
-            'id' => 1234,
+            'id'      => 1234,
             'subject' => 'hello',
         ], $obj->toArray());
 
@@ -77,11 +78,11 @@ class ArrayObjectTest extends TestCase
     {
         $obj = ArrayObject::fromJson(json_encode([
             [
-                'id' => 1234,
+                'id'      => 1234,
                 'subject' => 'hello',
             ],
             [
-                'id' => 3456,
+                'id'      => 3456,
                 'subject' => 'bye',
             ],
         ]));
@@ -89,21 +90,20 @@ class ArrayObjectTest extends TestCase
         $this->assertCount(2, $obj);
         $this->assertArraySubset([
             [
-                'id' => 1234,
+                'id'      => 1234,
                 'subject' => 'hello',
             ],
             [
-                'id' => 3456,
+                'id'      => 3456,
                 'subject' => 'bye',
             ],
         ], $obj->toArray());
     }
 
-
     public function test_has()
     {
         $obj = ArrayObject::fromArray([
-            'id' => 1234,
+            'id'      => 1234,
             'subject' => 'hello',
         ]);
         $this->assertTrue($obj->has('subject'));
@@ -111,13 +111,12 @@ class ArrayObjectTest extends TestCase
         $this->assertFalse($obj->has('missing_field'));
     }
 
-
     public function test_get()
     {
         $obj = ArrayObject::fromArray([
-            'id' => 1234,
+            'id'      => 1234,
             'subject' => 'hello',
-            'sub' => [
+            'sub'     => [
                 'x' => 1,
                 'y' => 2,
             ],
@@ -136,9 +135,9 @@ class ArrayObjectTest extends TestCase
     public function test_magic_getter()
     {
         $obj = ArrayObject::fromArray([
-            'id' => 1234,
+            'id'      => 1234,
             'subject' => 'hello',
-            'sub' => [
+            'sub'     => [
                 'x' => 1,
                 'y' => 2,
             ],
@@ -154,9 +153,9 @@ class ArrayObjectTest extends TestCase
     public function test_get_or_fail()
     {
         $obj = ArrayObject::fromArray([
-            'id' => 1234,
+            'id'      => 1234,
             'subject' => 'hello',
-            'sub' => [
+            'sub'     => [
                 'x' => 1,
                 'y' => 2,
             ],
@@ -172,13 +171,13 @@ class ArrayObjectTest extends TestCase
     {
         $obj = ArrayObject::fromArray([
             [
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Hello',
             ],
             [
-                'id' => 2,
+                'id'      => 2,
                 'subject' => 'Goodbye!',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
@@ -186,13 +185,13 @@ class ArrayObjectTest extends TestCase
         ]);
         $this->assertEquals([
             [
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Hello',
             ],
             [
-                'id' => 2,
+                'id'      => 2,
                 'subject' => 'Goodbye!',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
@@ -204,13 +203,13 @@ class ArrayObjectTest extends TestCase
     {
         $obj = ArrayObject::fromArray([
             [
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Hello',
             ],
             [
-                'id' => 2,
+                'id'      => 2,
                 'subject' => 'Goodbye!',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
@@ -223,19 +222,18 @@ class ArrayObjectTest extends TestCase
     {
         $obj = ArrayObject::fromArray([
             [
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Hello',
             ],
             [
-                'id' => 2,
+                'id'      => 2,
                 'subject' => 'Goodbye!',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
             ],
         ]);
-
 
         $count = 0;
         $obj->each(function (ArrayObjectInterface $obj) use (&$count) {
@@ -249,13 +247,12 @@ class ArrayObjectTest extends TestCase
             $count++;
         });
         $this->assertEquals(2, $count);
-
     }
 
     public function test_single_item_each()
     {
         $obj = ArrayObject::fromArray([
-            'id' => 1,
+            'id'      => 1,
             'subject' => 'Hello',
 
         ]);
@@ -263,30 +260,29 @@ class ArrayObjectTest extends TestCase
         $count = 0;
         $obj->each(function (ArrayObjectInterface $obj) use (&$count) {
             $this->assertEquals([
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Hello',
             ], $obj->toArray());
             $count++;
         });
         $this->assertEquals(1, $count);
-
     }
 
     public function test_pluck()
     {
         $obj = ArrayObject::fromArray([
             [
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Hello',
-                'sub' => [
+                'sub'     => [
                     'x' => 50,
                     'y' => 100,
                 ],
             ],
             [
-                'id' => 2,
+                'id'      => 2,
                 'subject' => 'Goodbye!',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
@@ -317,25 +313,25 @@ class ArrayObjectTest extends TestCase
     {
         $obj = ArrayObject::fromArray([
             [
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Hello',
-                'sub' => [
+                'sub'     => [
                     'x' => 50,
                     'y' => 100,
                 ],
             ],
             [
-                'id' => 2,
+                'id'      => 2,
                 'subject' => 'Goodbye!',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
             ],
             [
-                'id' => 3,
+                'id'      => 3,
                 'subject' => 'Welcome Back',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
@@ -356,32 +352,31 @@ class ArrayObjectTest extends TestCase
         $this->assertCount(2, $filteredCollection);
         $this->assertEquals(2, $filteredCollection[0]->id);
         $this->assertEquals(3, $filteredCollection[1]->id);
-
     }
 
     public function test_collection_array_access()
     {
         $obj = ArrayObject::fromArray([
             [
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Hello',
-                'sub' => [
+                'sub'     => [
                     'x' => 50,
                     'y' => 100,
                 ],
             ],
             [
-                'id' => 2,
+                'id'      => 2,
                 'subject' => 'Goodbye!',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
             ],
             [
-                'id' => 3,
+                'id'      => 3,
                 'subject' => 'Welcome Back',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
@@ -398,43 +393,42 @@ class ArrayObjectTest extends TestCase
     public function test_get_array_access()
     {
         $book = ArrayObject::fromArray([
-            'id' => 1,
-            'title' => '1984',
+            'id'     => 1,
+            'title'  => '1984',
             'author' => 'George Orwell',
         ]);
         $book = $book[0];
         $this->assertEquals([
-            'id' => 1,
-            'title' => '1984',
+            'id'     => 1,
+            'title'  => '1984',
             'author' => 'George Orwell',
         ], $book->toArray());
-
     }
 
     public function test_collection_has()
     {
         $obj = ArrayObject::fromArray([
             [
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Hello',
-                'sub' => [
+                'sub'     => [
                     'x' => 50,
                     'y' => 100,
                 ],
             ],
             [
-                'id' => 2,
+                'id'      => 2,
                 'subject' => 'Goodbye!',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                     'z' => 3,
                 ],
             ],
             [
-                'id' => 3,
+                'id'      => 3,
                 'subject' => 'Welcome Back',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
@@ -455,25 +449,25 @@ class ArrayObjectTest extends TestCase
     {
         $obj = ArrayObject::fromArray([
             [
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Hello',
-                'sub' => [
+                'sub'     => [
                     'x' => 50,
                     'y' => 100,
                 ],
             ],
             [
-                'id' => 2,
+                'id'      => 2,
                 'subject' => 'Goodbye!',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
             ],
             [
-                'id' => 3,
+                'id'      => 3,
                 'subject' => 'Welcome Back',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
@@ -488,41 +482,39 @@ class ArrayObjectTest extends TestCase
     public function test_count_single_node()
     {
         $obj = ArrayObject::fromArray([
-            'id' => 1,
+            'id'      => 1,
             'subject' => 'Hello',
-            'sub' => [
+            'sub'     => [
                 'x' => 50,
                 'y' => 100,
             ],
         ]);
         $this->assertCount(1, $obj);
-
     }
 
     public function test_get_with_collection()
     {
-
         $obj = ArrayObject::fromArray([
             [
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Hello',
-                'sub' => [
+                'sub'     => [
                     'x' => 50,
                     'y' => 100,
                 ],
             ],
             [
-                'id' => 2,
+                'id'      => 2,
                 'subject' => 'Goodbye!',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
             ],
             [
-                'id' => 3,
+                'id'      => 3,
                 'subject' => 'Welcome Back',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
@@ -545,17 +537,17 @@ class ArrayObjectTest extends TestCase
     {
         $obj = ArrayObject::fromArray([
             [
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Hello',
-                'sub' => [
+                'sub'     => [
                     'x' => 50,
                     'y' => 100,
                 ],
             ],
             [
-                'id' => 2,
+                'id'      => 2,
                 'subject' => 'Goodbye!',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
@@ -572,25 +564,25 @@ class ArrayObjectTest extends TestCase
     {
         $obj = ArrayObject::fromArray([
             [
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Hello',
-                'sub' => [
+                'sub'     => [
                     'x' => 50,
                     'y' => 100,
                 ],
             ],
             [
-                'id' => 2,
+                'id'      => 2,
                 'subject' => 'Goodbye!',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
             ],
             [
-                'id' => 3,
+                'id'      => 3,
                 'subject' => 'Welcome Back',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
@@ -600,9 +592,9 @@ class ArrayObjectTest extends TestCase
         $first = $obj->first();
         $this->assertInstanceOf(ArrayObject::class, $first);
         $this->assertEquals([
-            'id' => 1,
+            'id'      => 1,
             'subject' => 'Hello',
-            'sub' => [
+            'sub'     => [
                 'x' => 50,
                 'y' => 100,
             ],
@@ -612,9 +604,9 @@ class ArrayObjectTest extends TestCase
         $first = $first->first();
         $this->assertInstanceOf(ArrayObject::class, $first);
         $this->assertEquals([
-            'id' => 1,
+            'id'      => 1,
             'subject' => 'Hello',
-            'sub' => [
+            'sub'     => [
                 'x' => 50,
                 'y' => 100,
             ],
@@ -625,25 +617,25 @@ class ArrayObjectTest extends TestCase
     {
         $obj = ArrayObject::fromArray([
             [
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Hello',
-                'sub' => [
+                'sub'     => [
                     'x' => 50,
                     'y' => 100,
                 ],
             ],
             [
-                'id' => 2,
+                'id'      => 2,
                 'subject' => 'Goodbye!',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
             ],
             [
-                'id' => 3,
+                'id'      => 3,
                 'subject' => 'Welcome Back',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
@@ -653,9 +645,9 @@ class ArrayObjectTest extends TestCase
         $last = $obj->last();
         $this->assertInstanceOf(ArrayObject::class, $last);
         $this->assertEquals([
-            'id' => 3,
+            'id'      => 3,
             'subject' => 'Welcome Back',
-            'sub' => [
+            'sub'     => [
                 'x' => 1,
                 'y' => 2,
             ],
@@ -664,9 +656,9 @@ class ArrayObjectTest extends TestCase
         $last = $last->last();
         $this->assertInstanceOf(ArrayObject::class, $last);
         $this->assertEquals([
-            'id' => 3,
+            'id'      => 3,
             'subject' => 'Welcome Back',
-            'sub' => [
+            'sub'     => [
                 'x' => 1,
                 'y' => 2,
             ],
@@ -677,25 +669,25 @@ class ArrayObjectTest extends TestCase
     {
         $obj = ArrayObject::fromArray([
             [
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Hello',
-                'sub' => [
+                'sub'     => [
                     'x' => 50,
                     'y' => 100,
                 ],
             ],
             [
-                'id' => 2,
+                'id'      => 2,
                 'subject' => 'Goodbye!',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
             ],
             [
-                'id' => 3,
+                'id'      => 3,
                 'subject' => 'Welcome Back',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
@@ -711,25 +703,25 @@ class ArrayObjectTest extends TestCase
     {
         $obj = ArrayObject::fromArray([
             [
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Hello',
-                'sub' => [
+                'sub'     => [
                     'x' => 50,
                     'y' => 100,
                 ],
             ],
             [
-                'id' => 2,
+                'id'      => 2,
                 'subject' => 'Goodbye!',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
             ],
             [
-                'id' => 3,
+                'id'      => 3,
                 'subject' => 'Welcome Back',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
@@ -740,25 +732,25 @@ class ArrayObjectTest extends TestCase
         $obj[2] = $obj[0];
         $this->assertEquals([
             [
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Goodbye!',
-                'sub' => [
+                'sub'     => [
                     'x' => 50,
                     'y' => 100,
                 ],
             ],
             [
-                'id' => 2,
+                'id'      => 2,
                 'subject' => 'Hello',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
             ],
             [
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Goodbye!',
-                'sub' => [
+                'sub'     => [
                     'x' => 50,
                     'y' => 100,
                 ],
@@ -766,21 +758,21 @@ class ArrayObjectTest extends TestCase
         ], $obj->toArray());
 
         $book = ArrayObject::fromArray([
-            'id' => 1,
-            'title' => '1984',
+            'id'     => 1,
+            'title'  => '1984',
             'author' => 'George Orwell',
         ]);
         $book[1] = ArrayObject::fromArray([
-            'id' => 2,
-            'title' => 'Pride and Prejudice',
+            'id'     => 2,
+            'title'  => 'Pride and Prejudice',
             'author' => 'Jane Austen',
         ]);
         $this->assertCount(2, $book);
 
         $this->expectException(InvalidOffsetException::class);
         $book[3] = ArrayObject::fromArray([
-            'id' => 2,
-            'title' => 'Pride and Prejudice',
+            'id'     => 2,
+            'title'  => 'Pride and Prejudice',
             'author' => 'Jane Austen',
         ]);
     }
@@ -789,25 +781,25 @@ class ArrayObjectTest extends TestCase
     {
         $obj = ArrayObject::fromArray([
             [
-                'id' => 1,
+                'id'      => 1,
                 'subject' => 'Hello',
-                'sub' => [
+                'sub'     => [
                     'x' => 50,
                     'y' => 100,
                 ],
             ],
             [
-                'id' => 2,
+                'id'      => 2,
                 'subject' => 'Goodbye!',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
             ],
             [
-                'id' => 3,
+                'id'      => 3,
                 'subject' => 'Welcome Back',
-                'sub' => [
+                'sub'     => [
                     'x' => 1,
                     'y' => 2,
                 ],
@@ -826,9 +818,9 @@ class ArrayObjectTest extends TestCase
 
         // Associative array
         $this->assertTrue(ArrayObject::fromArray([
-            'id' => 3,
+            'id'      => 3,
             'subject' => 'Welcome Back',
-            'sub' => [
+            'sub'     => [
                 'x' => 1,
                 'y' => 2,
             ],
@@ -839,21 +831,21 @@ class ArrayObjectTest extends TestCase
     {
         $books = ArrayObject::fromArray([
             [
-                'id' => 1,
-                'title' => '1984',
+                'id'     => 1,
+                'title'  => '1984',
                 'author' => 'George Orwell',
             ],
             [
-                'id' => 2,
-                'title' => 'Pride and Prejudice',
+                'id'     => 2,
+                'title'  => 'Pride and Prejudice',
                 'author' => 'Jane Austen',
             ],
         ]);
         $book = $books->shift();
         $this->assertInstanceOf(ArrayObject::class, $book);
         $this->assertEquals([
-            'id' => 1,
-            'title' => '1984',
+            'id'     => 1,
+            'title'  => '1984',
             'author' => 'George Orwell',
         ], $book->toArray());
         $this->assertCount(1, $books);
@@ -861,8 +853,8 @@ class ArrayObjectTest extends TestCase
         $book = $books->shift();
         $this->assertInstanceOf(ArrayObject::class, $book);
         $this->assertEquals([
-            'id' => 2,
-            'title' => 'Pride and Prejudice',
+            'id'     => 2,
+            'title'  => 'Pride and Prejudice',
             'author' => 'Jane Austen',
         ], $book->toArray());
         $this->assertCount(0, $books);
@@ -870,8 +862,8 @@ class ArrayObjectTest extends TestCase
         // Book is not currently a collection, but it will be converted internally
         $newBook = $book->shift();
         $this->assertEquals([
-            'id' => 2,
-            'title' => 'Pride and Prejudice',
+            'id'     => 2,
+            'title'  => 'Pride and Prejudice',
             'author' => 'Jane Austen',
         ], $newBook->toArray());
         $this->assertFalse($book->hasItems());
@@ -884,13 +876,13 @@ class ArrayObjectTest extends TestCase
     {
         $books = ArrayObject::fromArray([
             [
-                'id' => 1,
-                'title' => '1984',
+                'id'     => 1,
+                'title'  => '1984',
                 'author' => 'George Orwell',
             ],
             [
-                'id' => 2,
-                'title' => 'Pride and Prejudice',
+                'id'     => 2,
+                'title'  => 'Pride and Prejudice',
                 'author' => 'Jane Austen',
             ],
         ]);
@@ -898,8 +890,8 @@ class ArrayObjectTest extends TestCase
         $book = $books->pop();
         $this->assertInstanceOf(ArrayObject::class, $book);
         $this->assertEquals([
-            'id' => 2,
-            'title' => 'Pride and Prejudice',
+            'id'     => 2,
+            'title'  => 'Pride and Prejudice',
             'author' => 'Jane Austen',
         ], $book->toArray());
         $this->assertCount(1, $books);
@@ -907,8 +899,8 @@ class ArrayObjectTest extends TestCase
         $book = $books->pop();
         $this->assertInstanceOf(ArrayObject::class, $book);
         $this->assertEquals([
-            'id' => 1,
-            'title' => '1984',
+            'id'     => 1,
+            'title'  => '1984',
             'author' => 'George Orwell',
         ], $book->toArray());
         $this->assertCount(0, $books);
@@ -921,46 +913,46 @@ class ArrayObjectTest extends TestCase
     {
         $books = ArrayObject::fromArray([
             [
-                'id' => 1,
-                'title' => '1984',
+                'id'     => 1,
+                'title'  => '1984',
                 'author' => 'George Orwell',
             ],
             [
-                'id' => 2,
-                'title' => 'Pride and Prejudice',
+                'id'     => 2,
+                'title'  => 'Pride and Prejudice',
                 'author' => 'Jane Austen',
             ],
         ]);
 
         $books->unshift([
-            'id' => 3,
-            'title' => 'To Kill a Mockingbird',
+            'id'     => 3,
+            'title'  => 'To Kill a Mockingbird',
             'author' => 'Harper Lee',
         ]);
         $this->assertCount(3, $books);
         $this->assertEquals([
-            'id' => 3,
-            'title' => 'To Kill a Mockingbird',
+            'id'     => 3,
+            'title'  => 'To Kill a Mockingbird',
             'author' => 'Harper Lee',
         ], $books->first()->toArray());
 
         $books->unshift([
-            'id' => 4,
-            'title' => 'The Great Gatsby',
+            'id'     => 4,
+            'title'  => 'The Great Gatsby',
             'author' => 'F. Scott Fitzgerald',
         ]);
         $this->assertCount(4, $books);
         $this->assertEquals([
-            'id' => 4,
-            'title' => 'The Great Gatsby',
+            'id'     => 4,
+            'title'  => 'The Great Gatsby',
             'author' => 'F. Scott Fitzgerald',
         ], $books->first()->toArray());
 
         $book = $books->first();
         $this->assertFalse($book->isCollection());
         $book->unshift([
-            'id' => 1,
-            'title' => '1984',
+            'id'     => 1,
+            'title'  => '1984',
             'author' => 'George Orwell',
         ]);
         // Automatic conversion to collection
@@ -972,46 +964,46 @@ class ArrayObjectTest extends TestCase
     {
         $books = ArrayObject::fromArray([
             [
-                'id' => 1,
-                'title' => '1984',
+                'id'     => 1,
+                'title'  => '1984',
                 'author' => 'George Orwell',
             ],
             [
-                'id' => 2,
-                'title' => 'Pride and Prejudice',
+                'id'     => 2,
+                'title'  => 'Pride and Prejudice',
                 'author' => 'Jane Austen',
             ],
         ]);
 
         $books->push([
-            'id' => 3,
-            'title' => 'To Kill a Mockingbird',
+            'id'     => 3,
+            'title'  => 'To Kill a Mockingbird',
             'author' => 'Harper Lee',
         ]);
         $this->assertCount(3, $books);
         $this->assertEquals([
-            'id' => 3,
-            'title' => 'To Kill a Mockingbird',
+            'id'     => 3,
+            'title'  => 'To Kill a Mockingbird',
             'author' => 'Harper Lee',
         ], $books->last()->toArray());
 
         $books->push([
-            'id' => 4,
-            'title' => 'The Great Gatsby',
+            'id'     => 4,
+            'title'  => 'The Great Gatsby',
             'author' => 'F. Scott Fitzgerald',
         ]);
         $this->assertCount(4, $books);
         $this->assertEquals([
-            'id' => 4,
-            'title' => 'The Great Gatsby',
+            'id'     => 4,
+            'title'  => 'The Great Gatsby',
             'author' => 'F. Scott Fitzgerald',
         ], $books->last()->toArray());
 
         $book = $books->last();
         $this->assertFalse($book->isCollection());
         $book->unshift([
-            'id' => 1,
-            'title' => '1984',
+            'id'     => 1,
+            'title'  => '1984',
             'author' => 'George Orwell',
         ]);
         // Automatic conversion to collection
@@ -1023,13 +1015,13 @@ class ArrayObjectTest extends TestCase
     {
         $books = ArrayObject::fromArray([
             [
-                'id' => 1,
-                'title' => '1984',
+                'id'     => 1,
+                'title'  => '1984',
                 'author' => 'George Orwell',
             ],
             [
-                'id' => 2,
-                'title' => 'Pride and Prejudice',
+                'id'     => 2,
+                'title'  => 'Pride and Prejudice',
                 'author' => 'Jane Austen',
             ],
         ]);
@@ -1044,8 +1036,8 @@ class ArrayObjectTest extends TestCase
         $this->assertFalse($books->hasItems());
 
         $book = ArrayObject::fromArray([
-            'id' => 1,
-            'title' => '1984',
+            'id'     => 1,
+            'title'  => '1984',
             'author' => 'George Orwell',
         ]);
         $this->assertFalse($book->isCollection());
@@ -1055,32 +1047,31 @@ class ArrayObjectTest extends TestCase
 
         $this->expectException(InvalidOffsetException::class);
         unset($books[0]);
-
     }
 
     public function test_to_json()
     {
         $books = ArrayObject::fromArray([
             [
-                'id' => 1,
-                'title' => '1984',
+                'id'     => 1,
+                'title'  => '1984',
                 'author' => 'George Orwell',
             ],
             [
-                'id' => 2,
-                'title' => 'Pride and Prejudice',
+                'id'     => 2,
+                'title'  => 'Pride and Prejudice',
                 'author' => 'Jane Austen',
             ],
         ]);
         $this->assertEquals(json_encode([
             [
-                'id' => 1,
-                'title' => '1984',
+                'id'     => 1,
+                'title'  => '1984',
                 'author' => 'George Orwell',
             ],
             [
-                'id' => 2,
-                'title' => 'Pride and Prejudice',
+                'id'     => 2,
+                'title'  => 'Pride and Prejudice',
                 'author' => 'Jane Austen',
             ],
         ]), $books->toJson());
@@ -1095,35 +1086,35 @@ class ArrayObjectTest extends TestCase
     {
         $books = ArrayObject::fromArray([
             [
-                'id' => 1,
-                'title' => '1984',
+                'id'     => 1,
+                'title'  => '1984',
                 'author' => 'George Orwell',
             ],
             [
-                'id' => 2,
-                'title' => 'Pride and Prejudice',
+                'id'     => 2,
+                'title'  => 'Pride and Prejudice',
                 'author' => 'Jane Austen',
             ],
         ]);
         $this->assertEquals(json_encode([
             [
-                'id' => 1,
-                'title' => '1984',
+                'id'     => 1,
+                'title'  => '1984',
                 'author' => 'George Orwell',
             ],
             [
-                'id' => 2,
-                'title' => 'Pride and Prejudice',
+                'id'     => 2,
+                'title'  => 'Pride and Prejudice',
                 'author' => 'Jane Austen',
             ],
-        ]), (string)$books);
+        ]), (string) $books);
     }
 
     public function test_magic_setter()
     {
         $book = ArrayObject::fromArray([
-            'id' => 1,
-            'title' => '1984',
+            'id'     => 1,
+            'title'  => '1984',
             'author' => 'George Orwell',
         ]);
         $book->id = 2;
@@ -1133,8 +1124,8 @@ class ArrayObjectTest extends TestCase
     public function test_set_with_only_exists_option()
     {
         $book = ArrayObject::fromArray([
-            'id' => 1,
-            'title' => '1984',
+            'id'     => 1,
+            'title'  => '1984',
             'author' => 'George Orwell',
         ]);
         $book->set('id', 3);
@@ -1148,8 +1139,8 @@ class ArrayObjectTest extends TestCase
     public function test_isset()
     {
         $book = ArrayObject::fromArray([
-            'id' => 1,
-            'title' => '1984',
+            'id'     => 1,
+            'title'  => '1984',
             'author' => 'George Orwell',
         ]);
         $this->assertTrue(isset($book->id));

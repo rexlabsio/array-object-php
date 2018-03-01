@@ -1,6 +1,6 @@
 <?php
-namespace Rexlabs\ArrayObject\Exceptions;
 
+namespace Rexlabs\ArrayObject\Exceptions;
 
 interface ArrayObjectException
 {
