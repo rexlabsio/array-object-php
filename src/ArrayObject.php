@@ -152,9 +152,16 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
      */
     public function filterCallback(callable $fn): ArrayObjectInterface
     {
-        return new static(array_values(array_filter(array_map(function ($data) {
-            return $this->box($data);
-        }, $this->isCollection() ? $this->data : [$this->$this->data]), $fn)));
+        return new static(
+            array_values(
+                array_filter(
+                    $this->isCollection() ? $this->data : [$this->data],
+                    function($item) use ($fn) {
+                        return $fn($this->box($item));
+                    }
+                )
+            )
+        );
     }
 
     /**
