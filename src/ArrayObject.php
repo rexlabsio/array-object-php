@@ -244,10 +244,11 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     }
 
     /**
+     * Returns the value for a given key.
      * @param string $key
      * @param mixed  $default
      *
-     * @return mixed
+     * @return ArrayObjectInterface|mixed
      */
     public function get($key, $default = null)
     {
@@ -256,7 +257,24 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
             return $default;
         }
 
-        return $this->box($result);
+        return $this->box($this->getRaw($key, $default));
+    }
+
+    /**
+     * Returns the un-boxed (raw) value for the given key.
+     * @param string $key
+     * @param mixed  $default
+     *
+     * @return mixed
+     */
+    public function getRaw($key, $default = null)
+    {
+        $result = ArrayUtility::dotRead($this->data, $this->getNormalizedKey($key));
+        if ($result === null) {
+            return $default;
+        }
+
+        return $result;
     }
 
     /**

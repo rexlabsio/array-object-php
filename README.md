@@ -99,6 +99,18 @@ $obj->books[1]->title;    // "Pride and Prejudice"
 $obj->books[0]->missing;  // throws InvalidPropertyException
 ```
 
+#### getRaw($key, $default = null)
+
+When a value fetched via `get('some.key')` is an array, it is boxed into an instance of `ArrayObject` .
+The `getRaw()` method, however, does not perform any 'boxing' on the returned value.
+
+```php
+$obj->get('books');            // ArrayObject
+$obj->getRaw('books');         // (array)
+$obj->get('books.0.title');    // "1984"
+$obj->getRaw('books.0.title'); // "1984"
+```
+
 #### set($key, $value, $onlyIfExists = false)
 
 The `set()` method allows you to set a property using dot notation. It will automatically create the 
