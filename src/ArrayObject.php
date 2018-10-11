@@ -248,7 +248,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
      * @param string $key
      * @param mixed  $default
      *
-     * @return mixed
+     * @return ArrayObjectInterface|mixed
      */
     public function get($key, $default = null)
     {
