@@ -1146,4 +1146,19 @@ class ArrayObjectTest extends TestCase
         $this->assertTrue(isset($book->id));
         $this->assertFalse(isset($book->missing_field));
     }
+
+    public function test_can_get_unboxed_value()
+    {
+        $foo = ArrayObject::fromArray([
+            'foo' => 'bar',
+        ])->getRaw('foo');
+        $this->assertEquals('bar', $foo);
+
+        $foo = ArrayObject::fromArray([
+            'foo' => [
+                'bar',
+            ],
+        ])->getRaw('foo');
+        $this->assertEquals(['bar'], $foo);
+    }
 }
