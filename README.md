@@ -104,8 +104,6 @@ $obj->books[0]->missing;  // throws InvalidPropertyException
 When a value fetched via `get('some.key')` is an array, it is boxed into an instance of `ArrayObject` .
 The `getRaw()` method, however, does not perform any 'boxing' on the returned value.
 
-The `get()` method allows you to fetch the value of a property, and receive a default if the value does not exist. It also supports depth which is indicated with a `.`:
-
 ```php
 $obj->get('books');            // ArrayObject
 $obj->getRaw('books');         // (array)
