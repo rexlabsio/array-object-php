@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.1.0
+
+- Add getRaw() instance method to return unboxed values
+
 ## 2.0.2
 
 - Fix bug in filter/filterCallback where items were incorrectly boxed
