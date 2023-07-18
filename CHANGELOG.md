@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 3.0.0
+
+- Add support for php 8+
+
 ## 2.1.0
 
 - Add getRaw() instance method to return unboxed values

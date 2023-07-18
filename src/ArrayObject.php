@@ -379,7 +379,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return $this->isCollection() ? \count($this->data) : 1;
     }
@@ -450,7 +450,10 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
      * {@inheritdoc}
      *
      * @throws \Rexlabs\ArrayObject\Exceptions\InvalidOffsetException
+     *
+     * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($offset)
     {
         if (!$this->offsetExists($offset)) {
@@ -466,7 +469,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
     /**
      * {@inheritdoc}
      */
-    public function offsetExists($offset)
+    public function offsetExists($offset): bool
     {
         return $this->isCollection() ? isset($this->data[$offset]) : ($offset === 0);
     }
@@ -476,7 +479,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
      *
      * @throws \Rexlabs\ArrayObject\Exceptions\InvalidOffsetException
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if (!$this->isCollection()) {
             $this->forceCollection();
@@ -493,7 +496,7 @@ class ArrayObject implements ArrayObjectInterface, \ArrayAccess, \Countable, \It
      *
      * @throws \Rexlabs\ArrayObject\Exceptions\InvalidOffsetException
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         if (!$this->isCollection()) {
             $this->forceCollection();
