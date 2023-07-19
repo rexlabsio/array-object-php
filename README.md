@@ -17,11 +17,6 @@ This library is used by the [Hyper Http Client](https://packagist.org/packages/r
 composer require rexlabs/array-object
 ```
 
-## Dependencies
-
-- PHP 7.0 (or greater)
-- `rexlabs/utility-belt:^3.0`
-
 ## Usage
 
 ```php
