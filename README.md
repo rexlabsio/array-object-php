@@ -1,10 +1,7 @@
 # Array Object 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![Build Status](https://travis-ci.org/rexlabsio/array-object-php.svg?branch=master)](https://travis-ci.org/rexlabsio/array-object-php)
-[![Code Coverage](https://scrutinizer-ci.com/g/rexlabsio/array-object-php/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/rexlabsio/array-object-php/?branch=master)
 [![Packagist](https://img.shields.io/packagist/v/rexlabs/array-object.svg)](https://packagist.org/packages/rexlabs/array-object)
-
 
 ArrayObject is a PHP library that provides a light-weight interface for working fluently with array's. 
 
