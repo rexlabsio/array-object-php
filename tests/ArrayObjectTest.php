@@ -2,6 +2,7 @@
 
 namespace Rexlabs\ArrayObject\Test;
 
+use DMS\PHPUnitExtensions\ArraySubset\ArraySubsetAsserts;
 use PHPUnit\Framework\TestCase;
 use Rexlabs\ArrayObject\ArrayObject;
 use Rexlabs\ArrayObject\ArrayObjectInterface;
@@ -12,6 +13,8 @@ use Rexlabs\ArrayObject\Exceptions\JsonEncodeException;
 
 class ArrayObjectTest extends TestCase
 {
+    use ArraySubsetAsserts;
+
     public function test_from_array()
     {
         $obj = ArrayObject::fromArray([
